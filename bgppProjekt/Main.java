@@ -9,6 +9,11 @@ public class Main {
 		System.out.println("Hello World!");
 		// TODO Auto-generated method stub
 
+	CreldePro derp = new CreldePro();
+	
+	derp.doIgiveCreldeFreeRedbull();
 	}
+	
+
 
 }
