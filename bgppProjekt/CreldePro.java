@@ -17,6 +17,10 @@ public class CreldePro {
 			System.out.println("Give the Man a Redbull!");
 		
 		}
+		else
+		{
+			System.out.println("Give the Man a Redbull!");
+		}
 	}
 
 }
