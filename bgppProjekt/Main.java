@@ -11,6 +11,11 @@ public class Main {
 		
 		System.out.println("We are collaboratin'! :D");
 
+	CreldePro derp = new CreldePro();
+	
+	derp.doIgiveCreldeFreeRedbull();
 	}
+	
+
 
 }
