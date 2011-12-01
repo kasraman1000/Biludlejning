@@ -14,6 +14,7 @@ public class Main {
 	CreldePro derp = new CreldePro();
 	
 	derp.doIgiveCreldeFreeRedbull();
+	derp.doIgiveCreldeFreeRedbull();
 	}
 	
 
