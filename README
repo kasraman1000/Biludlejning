@@ -1,1 +1,32 @@
-Awwright gaise, let's get this project going! :D
+Kasra:
+Allright, vi bliver nødt til at komme i gang med skidtet, så jeg tror jeg begynder at skrive mine umiddelbare tanker ned her
+
+Hele projektet KAN IMO opdeles i tre moduler:
+- GUI
+- DATABASE
+- LOGIK
+
+GUI siger lidt sig selv, det er alt hvad man ser på skærmen.
+DATABASEN er selve databasen, og muligvis nogle medhørende klasser så programmet kan tale med databasen ordetligt.
+LOGIKken er så det der binder de to forskellige dele sammen, så programmet opfører sig som vi gerne vil.
+ 
+Men anywoo, det er lidt stort og vague at tage fat i det og begynde at arbejde på det, så jeg bliver nødt til at blive lidt mere specifik med arbejdsopgaver fra start.
+
+Hvad jeg umiddelbart kan forestille mig som vi kan gå i gang lige nu, er følgende:
+
+- Databasen
+	- At sætte selve databasen op (vi er blevet enige om MySQL?)
+	- Muligvis nogle tilhørende klasser i java, der har metoder til at forbinde sig med databasen
+	  og returnere noget passende, f.eks. et array af 'Reservation'-objekter el. lign., efter behov.
+	
+- Kalenderen
+	- Lave hele kalenderen som en selvstændig klasse, som er i stand til, gennem metoder, at modtage 'Reservation'
+	  objekter og tegne dem på skærmen.
+
+- Resten af GUI'et
+	- Hele GUI'et, uden kalenderen, men selvfølgelig plads til selve kalenderen
+	- Knapper og panels og labels osv., knapperne behøver ikke gøre noget, de skal bare være der indtil videre
+	
+Det er bare off the top of my head.	Jeg håber det vil inpirere jer til at kunne begynde på at arbejde på noget af det.
+
+Feel free to add/edit det her eller at begynde at lave noget på programmet, any work is better than no work.
