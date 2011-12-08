@@ -1,6 +1,6 @@
 package bgppProjekt;
 
-import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 /**
  * A class to represent a single Reservation entity from the database
@@ -12,8 +12,8 @@ public class Reservation {
 	
 		private int id;
 		private Car car;
-		private Calendar startingDate;
-		private Calendar endDate;
+		private GregorianCalendar startingDate;
+		private GregorianCalendar endDate;
 		private String customerPhone;
 		private String customerName;
 		
@@ -27,7 +27,7 @@ public class Reservation {
 		 * @param phone The phone number of the customer
 		 * @param name The name of the customer
 		 */
-		public Reservation(int i, Car c, Calendar date1, Calendar date2, String phone, String name) {
+		public Reservation(int i, Car c, GregorianCalendar date1, GregorianCalendar date2, String phone, String name) {
 			id 				= i;
 			car 			= c;
 			startingDate 	= date1;
@@ -53,14 +53,14 @@ public class Reservation {
 		/**
 		 * @return the startingDate
 		 */
-		public Calendar getStartingDate() {
+		public GregorianCalendar getStartingDate() {
 			return startingDate;
 		}
 
 		/**
 		 * @return the endDate
 		 */
-		public Calendar getEndDate() {
+		public GregorianCalendar getEndDate() {
 			return endDate;
 		}
 
@@ -88,14 +88,14 @@ public class Reservation {
 		/**
 		 * @param startingDate the startingDate to set
 		 */
-		public void setStartingDate(Calendar startingDate) {
+		public void setStartingDate(GregorianCalendar startingDate) {
 			this.startingDate = startingDate;
 		}
 
 		/**
 		 * @param endDate the endDate to set
 		 */
-		public void setEndDate(Calendar endDate) {
+		public void setEndDate(GregorianCalendar endDate) {
 			this.endDate = endDate;
 		}
 
