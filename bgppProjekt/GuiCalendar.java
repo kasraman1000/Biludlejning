@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import javax.swing.*;
+import java.util.Date;
 
 /**
  * The calendar graphical module, showing reservations on a monthly basis
@@ -25,6 +26,11 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	private final int cellWidth = 20;
 	private final int cellHeight = 20;
 	private final int carNameWidth = 100;
+	
+	// constants to track double clicks
+	int clickCount =0;
+	private Date click;
+	private int reservId; 
 	
 	// class fields
 	private ArrayList<Reservation> reservations;
@@ -159,24 +165,61 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			}
 		}
 	}
-
+	// function to determine if a click occured soon enough after the previous one to be a double-click.
+	public boolean doubleClick()
+	{
+		Date newClick = new Date();
+		long duration = newClick.getTime() - click.getTime();
+		System.out.println("duration: " + duration);
+		int reservId2=0;
+		if(selectedReservation!=null)
+		{
+			reservId2 = selectedReservation.getId();
+			System.out.println("Reserv2: " + reservId2);
+		}
+		
+		if (duration<500 && reservId==reservId2)
+		{
+			return true;
+		}
+		else 
+		{
+			return false;
+		}
+	}
+	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		System.out.println("CLICKED");
+		
+
+		
 		
 		int a = (e.getX() - carNameWidth) / cellWidth;
 		int b = -1 + (e.getY()/cellHeight);
 		
-		System.out.println(a);
-		System.out.println(b);
+		System.out.println("x-coordinate: " + a);
+		System.out.println("y-coordinate: " + b);
 		
 		if (guiArray[b][a] != null) {
 			selectedReservation = guiArray[b][a];
-			System.out.println(selectedReservation.getId());
+			System.out.println("ReservationID: " + selectedReservation.getId());
+			if (clickCount > 0)
+			{
+				if (doubleClick())
+				{
+					System.out.println("It was a doubleclick");
+					//CODE/FUNCTIONS TO BE CALLED WHEN DOUBLECLICK
+				}
+			}
+			click = new Date();
+			reservId = selectedReservation.getId();	
+			System.out.println("reservId : " + reservId);
 		}
+		System.out.println("CLICKED");
 		
 				
 		repaint();
+		clickCount=clickCount+1;
 	}
 
 	@Override
