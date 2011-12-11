@@ -164,15 +164,16 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	public void mouseClicked(MouseEvent e) {
 		System.out.println("CLICKED");
 		
+		
 		int a = (e.getX() - carNameWidth) / cellWidth;
 		int b = -1 + (e.getY()/cellHeight);
 		
-		System.out.println(a);
-		System.out.println(b);
+		System.out.println("x-coordinate: " + a);
+		System.out.println("y-coordinate: " + b);
 		
 		if (guiArray[b][a] != null) {
 			selectedReservation = guiArray[b][a];
-			System.out.println(selectedReservation.getId());
+			System.out.println("ReservationID: " + selectedReservation.getId());
 		}
 		
 				

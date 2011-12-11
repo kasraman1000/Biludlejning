@@ -19,8 +19,9 @@ public class GUITest {
 		Container contentPane = testFrame.getContentPane();
 		
 		contentPane.add(new GuiCalendar());
-		
-		testFrame.setBounds(400, 400, 800, 600); //WHY THE FUCK WON'T IT RESIZE WINDOW?!? D:<
+		Dimension d = new Dimension(800,600);
+		testFrame.setSize(d);
+		//testFrame.setBounds(400, 400, 800, 600); //WHY THE FUCK WON'T IT RESIZE WINDOW?!? D:<
 		//testFrame.setResizable(false);
 		
 		testFrame.pack();
