@@ -30,7 +30,10 @@ Hvad jeg umiddelbart kan forestille mig som vi kan gå i gang lige nu, er følgend
 Det er bare off the top of my head.	Jeg håber det vil inpirere jer til at kunne begynde på at arbejde på noget af det.
 
 Feel free to add/edit det her eller at begynde at lave noget på programmet, any work is better than no work.
+
 Crelde:
 Så har jeg sat databaseforbindelsen næsten oppe !!!! Den er stadig ikk helt connected, ved ikk hvorfor, men finder ud af det.
 Ved ikke om det er meningen at database forbindelsen skal smides i Main klassen. Laver snart en database klasse for sig selv
 Men jeg har oprettet en DB på itus server, og lavet en bruger og en database der.
+
+update: Den er nu helt connected!!! WIN WIN WIN. next up cleaning it into its own class
