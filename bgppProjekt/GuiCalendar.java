@@ -14,17 +14,14 @@ import java.util.Date;
  * It's not finished though, it needs the following:
  * 	A way to change the month and car-type shown
  * 	It needs to somehow hook up with a database and pull those data (month/reservations)
- * 	
- * 
- *
  */
 public class GuiCalendar extends JComponent implements MouseListener {
-	// fields for drawing
+	// constants for drawing
 	private final int cellWidth = 20;
 	private final int cellHeight = 20;
 	private final int carNameWidth = 100;
 	
-	// constants to track double clicks
+	// fields to track double clicks
 	int clickCount =0;
 	private Date click;
 	private int reservId; 
@@ -38,11 +35,15 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	private GregorianCalendar selectedMonth;
 	private Reservation selectedReservation;
 	
-	public GuiCalendar() {
+	private GUI gui;
+	
+	public GuiCalendar(GUI g) {
 		this.addMouseListener(this);
 		
+		gui = g;
+		
 		selectedCarType = CarType.SEDAN;
-		selectedMonth = new GregorianCalendar(2011, 11, 7);
+		selectedMonth = new GregorianCalendar(2011, 11, 1);
 		
 		cars = new ArrayList<Car>();
 		reservations = new ArrayList<Reservation>();
@@ -50,11 +51,22 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		fillCars();
 		fillReservations();
 		
+		reload();
+	}
+	
+	/**
+	 * Makes the calendar load everything 
+	 */
+	private void reload() {
+		//STILL NOT DONE
+		
+		selectedReservation = null;
+		
+
 		fillGuiArray();
 		
 		repaint();
 	}
-	
 	/**
 	 * filling up the 2d array
 	 */
@@ -174,14 +186,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			System.out.println("Reserv2: " + reservId2);
 		}
 		
-		if (duration<500 && reservId==reservId2)
-		{
-			return true;
-		}
-		else 
-		{
-			return false;
-		}
+		return (duration<500 && reservId==reservId2);
 	}
 	
 
@@ -203,6 +208,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 				{
 					System.out.println("It was a doubleclick");
 					//CODE/FUNCTIONS TO BE CALLED WHEN DOUBLECLICK
+					gui.doubleClicked();
 				}
 			}
 			click = new Date();
@@ -248,6 +254,41 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		return selectedReservation;
 	}
 	
+	public int getSelectedMonth() {
+		return selectedMonth.get(Calendar.MONTH);
+	}
+	
+	public int getSelectedYear() {
+		return selectedMonth.get(Calendar.YEAR);
+	}
+	
+	public CarType getSelectedCarType() {
+		return selectedCarType;
+	}
+	
+	public void setSelectedMonth(int i) {
+		System.out.println("Changing selected month to: " + i);
+		selectedMonth = new GregorianCalendar(
+				selectedMonth.get(Calendar.YEAR),
+				i,
+				1);
+		reload();
+	}
+	
+	public void setSelectedYear(int i) {
+		System.out.println("Changing selected year to: " + i);
+		selectedMonth = new GregorianCalendar(
+				i, 
+				selectedMonth.get(Calendar.MONTH), 
+				1);
+		reload();
+	}
+	
+	public void setSelectedCarType(CarType c) {
+		System.out.println("Changing selected car type to: " + c);
+		selectedCarType = c;
+		reload();
+	}
 	
 	
 	public Dimension getPreferredSize() {
