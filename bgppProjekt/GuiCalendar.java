@@ -253,5 +253,17 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	public Reservation getSelectedReservation(){
 		return selectedReservation;
 	}
+	
+	
+	
+	public Dimension getPreferredSize() {
+		return new Dimension(calendarWidth, calendarHeight);
+	}
+	
+	public Dimension getMinimumSize() {
+		return getPreferredSize();
+	}
+	
+	
 
 }
