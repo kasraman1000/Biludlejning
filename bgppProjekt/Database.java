@@ -1,11 +1,11 @@
 package bgppProjekt;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.RowId;
 import java.sql.SQLException;
 import com.mysql.jdbc.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 
 public class Database {
@@ -15,6 +15,7 @@ public class Database {
 	static String CostumerName;
 	static int type;
 	static String carName;
+	
 
 		// connection objekt til databaseforbindelsen
 		private static Connection conn = null;
@@ -194,8 +195,45 @@ public class Database {
 		}
 		return carName;			
 	}			
+	
+	public static ArrayList<Car> initCars(){
+		ArrayList<Car> cars = new ArrayList<Car>();
+		try {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Car";
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			while (result.next()) {
+				int carID = result.getInt(1);
+				int type = result.getInt(2);
+				String name = result.getString(3);
+				CarType cType = null;
+				
+				if (type == 1){
+					cType = CarType.SEDAN;
+				}
+				else if (type == 2){
+					cType = CarType.VAN;
+				}
+				else if (type == 3){
+					cType = CarType.STATIONCAR;
+					}
+				else if (type == 4){
+					cType = CarType.SPORTSCAR;
+				}	
+				cars.add(new Car(cType, name, carID));
+								
+			}	
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return cars;
+	}
+	
 	// This method closes the database
-
 	public void closeDb() {
 		try {
 			conn.close();

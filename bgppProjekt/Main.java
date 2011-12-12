@@ -8,11 +8,11 @@ public class Main {
 
 		//GUITest guiTest = new GUITest();
 
-		GUI gui = new GUI();
+	//	GUI gui = new GUI();
 		Database.connect();
 		//Database.select();
 		//Database.initiateDb();
-
+/*
 		Database.getcarID(1);
 		Database.getPhone(1);
 		Database.getCostumerName(1);
@@ -20,6 +20,8 @@ public class Main {
 		Database.getEndDate(1);
 		Database.getType(1);
 		Database.getCarName(1);
+		*/
+		Database.initCars();
 
 		
 
