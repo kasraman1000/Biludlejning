@@ -9,6 +9,7 @@ public class Car {
 	
 	private CarType type;
 	private String name;
+	private int id;
 	
 	/**
 	 * The Car constructor
@@ -16,9 +17,10 @@ public class Car {
 	 * @param type The type of car
 	 * @param name The name of the car
 	 */
-	public Car(CarType type, String name) {
+	public Car(CarType type, String name, int id) {
 		this.type = type;
 		this.name = name;
+		this.id   = id;
 	}
 
 	/**
@@ -33,6 +35,13 @@ public class Car {
 	 */
 	public String getName() {
 		return name;
+	}
+	
+	/**
+	 * @return The id of the car
+	 */
+	public int getId() {
+		return id;
 	}
 	
 

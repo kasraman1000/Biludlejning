@@ -15,6 +15,7 @@ public class Database {
 	static String CostumerName;
 	static int type;
 	static String carName;
+
 		// connection objekt til databaseforbindelsen
 		private static Connection conn = null;
 		// driveren til databasen
@@ -194,6 +195,7 @@ public class Database {
 		return carName;			
 	}			
 	// This method closes the database
+
 	public void closeDb() {
 		try {
 			conn.close();
