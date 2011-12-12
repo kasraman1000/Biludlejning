@@ -9,8 +9,14 @@ public class Main {
 		Database.connect();
 		//Database.select();
 		//Database.initiateDb();
+		Database.getcarID(1);
+		Database.getPhone(1);
+		Database.getCostumerName(1);
 		Database.getStartDate(1);
-		
+		Database.getEndDate(1);
+		Database.getType(1);
+		Database.getCarName(1);
+
 		
 		
 	}
