@@ -75,7 +75,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		
 		for (int c = 0; c < cars.size(); c++){
 			for (Reservation r : reservations) {
-				if (r.getCar() == cars.get(c)) {
+				if (r.getCarId() == cars.get(c).getId()) {
 					GregorianCalendar date = (GregorianCalendar) r.getStartingDate().clone();
 					GregorianCalendar end = (GregorianCalendar) r.getEndDate().clone();
 					end.roll(Calendar.DATE, true);
@@ -96,10 +96,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * Filling out the cars array, for testing purposes
 	 */
 	private void fillCars() {
-		cars.add(new Car(CarType.SEDAN, "Sedan1"));
-		cars.add(new Car(CarType.SEDAN, "Sedan2"));
-		cars.add(new Car(CarType.SEDAN, "Sedan3"));
-		cars.add(new Car(CarType.SEDAN, "Sedan4"));
+		cars.add(new Car(CarType.SEDAN, "Sedan1", 1));
+		cars.add(new Car(CarType.SEDAN, "Sedan2", 2));
+		cars.add(new Car(CarType.SEDAN, "Sedan3", 3));
+		cars.add(new Car(CarType.SEDAN, "Sedan4", 4));
 	}
 	
 	/**
@@ -107,11 +107,11 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 */
 	private void fillReservations() {
 		
-		reservations.add(new Reservation(2, cars.get(1), new GregorianCalendar(2011,11,05), new GregorianCalendar(2011,11,13),"",""));
-		reservations.add(new Reservation(3, cars.get(2), new GregorianCalendar(2011,11,01), new GregorianCalendar(2011,11,14),"",""));
-		reservations.add(new Reservation(4, cars.get(0), new GregorianCalendar(2011,11,13), new GregorianCalendar(2011,11,15),"",""));
-		reservations.add(new Reservation(1, cars.get(0), new GregorianCalendar(2011,11,07), new GregorianCalendar(2011,11,12),"",""));
-		reservations.add(new Reservation(5, cars.get(3), new GregorianCalendar(2011,11,1), new GregorianCalendar(2011,11,3),"",""));
+		reservations.add(new Reservation(2, cars.get(0).getId(), new GregorianCalendar(2011,11,05), new GregorianCalendar(2011,11,13),"",""));
+		reservations.add(new Reservation(3, cars.get(1).getId(), new GregorianCalendar(2011,11,01), new GregorianCalendar(2011,11,14),"",""));
+		reservations.add(new Reservation(4, cars.get(2).getId(), new GregorianCalendar(2011,11,13), new GregorianCalendar(2011,11,15),"",""));
+		reservations.add(new Reservation(1, cars.get(3).getId(), new GregorianCalendar(2011,11,07), new GregorianCalendar(2011,11,12),"",""));
+		reservations.add(new Reservation(5, cars.get(3).getId(), new GregorianCalendar(2011,11,1), new GregorianCalendar(2011,11,3),"",""));
 	}
 	
 	
@@ -149,7 +149,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		for (Reservation r : reservations) {
 			int carNumber = 1;
 			for (Car c : cars) {
-				if (c == r.getCar()) {
+				if (c.getId() == r.getCarId()) {
 					if (r == selectedReservation) {
 						g.setColor(Color.ORANGE);
 					}

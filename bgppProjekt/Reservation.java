@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 public class Reservation {
 	
 		private int id;
-		private Car car;
+		private int carId;
 		private GregorianCalendar startingDate;
 		private GregorianCalendar endDate;
 		private String customerPhone;
@@ -27,9 +27,9 @@ public class Reservation {
 		 * @param phone The phone number of the customer
 		 * @param name The name of the customer
 		 */
-		public Reservation(int i, Car c, GregorianCalendar date1, GregorianCalendar date2, String phone, String name) {
+		public Reservation(int i, int cId, GregorianCalendar date1, GregorianCalendar date2, String phone, String name) {
 			id 				= i;
-			car 			= c;
+			carId 			= cId;
 			startingDate 	= date1;
 			endDate 		= date2;
 			customerPhone 	= phone;
@@ -46,8 +46,8 @@ public class Reservation {
 		/**
 		 * @return the car
 		 */
-		public Car getCar() {
-			return car;
+		public int getCarId() {
+			return carId;
 		}
 
 		/**
@@ -81,8 +81,8 @@ public class Reservation {
 		/**
 		 * @param car the car to set
 		 */
-		public void setCar(Car car) {
-			this.car = car;
+		public void setCar(int carId) {
+			this.carId = carId;
 		}
 
 		/**
