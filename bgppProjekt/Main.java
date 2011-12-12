@@ -7,9 +7,9 @@ public class Main {
 		
 
 		//GUITest guiTest = new GUITest();
-
-	//	GUI gui = new GUI();
 		Database.connect();
+		GUI gui = new GUI();
+		
 		//Database.select();
 		//Database.initiateDb();
 /*

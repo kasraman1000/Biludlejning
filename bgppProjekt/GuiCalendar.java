@@ -16,6 +16,7 @@ import java.util.Date;
  * 	It needs to somehow hook up with a database and pull those data (month/reservations)
  */
 public class GuiCalendar extends JComponent implements MouseListener {
+	
 	// constants for drawing
 	private final int cellWidth = 20;
 	private final int cellHeight = 20;
@@ -96,10 +97,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * Filling out the cars array, for testing purposes
 	 */
 	private void fillCars() {
-		cars.add(new Car(CarType.SEDAN, "Sedan1", 1));
-		cars.add(new Car(CarType.SEDAN, "Sedan2", 2));
-		cars.add(new Car(CarType.SEDAN, "Sedan3", 3));
-		cars.add(new Car(CarType.SEDAN, "Sedan4", 4));
+		cars = Database.initCars();
 	}
 	
 	/**
