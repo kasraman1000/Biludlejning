@@ -16,13 +16,10 @@ import java.util.Date;
  * 	It needs to somehow hook up with a database and pull those data (month/reservations)
  * 	
  * 
- * @author Kasra Tahmasebi
  *
  */
 public class GuiCalendar extends JComponent implements MouseListener {
-	// constants for drawing
-	private final int calendarWidth = 800;
-	private final int calendarHeight = 300;
+	// fields for drawing
 	private final int cellWidth = 20;
 	private final int cellHeight = 20;
 	private final int carNameWidth = 100;
@@ -57,7 +54,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		
 		repaint();
 	}
-	
 	
 	/**
 	 * filling up the 2d array
@@ -111,7 +107,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		g.setColor(Color.BLACK);
 		
 		// Drawing border
-		g.drawRect(0, 0, calendarWidth, calendarHeight);
+		g.drawRect(0, 0, calcWidth(), calcHeight());
 		
 		// Drawing the name of the month and year
 		g.drawString(
@@ -120,20 +116,20 @@ public class GuiCalendar extends JComponent implements MouseListener {
 				cellHeight);
 		
 		// Drawing everything horizontal (names and lines)
-		g.drawLine(0, cellHeight, calendarWidth, cellHeight);
+		g.drawLine(0, cellHeight, calcWidth(), cellHeight);
 		
 		int numCars = 0;
 		for (Car c : cars) {
 			if (c.getType() == selectedCarType) {
 				g.drawString(c.getName(), 0, 2*cellHeight + (numCars * cellHeight));
-				g.drawLine(0, 2*cellHeight + (numCars * cellHeight), calendarWidth, 2*cellHeight + (numCars * cellHeight));
+				g.drawLine(0, 2*cellHeight + (numCars * cellHeight), calcWidth(), 2*cellHeight + (numCars * cellHeight));
 				numCars++;
 			}
 		}
 		
 		// Drawing everything vertical (Numbers and lines)
 		for (int i = 0; i < selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH);i++) {
-			g.drawLine(carNameWidth + (cellWidth*i), 0, carNameWidth + (cellWidth*i), calendarHeight);
+			g.drawLine(carNameWidth + (cellWidth*i), 0, carNameWidth + (cellWidth*i), calcHeight());
 			g.drawString(Integer.toString(i + 1), carNameWidth + (cellWidth*i), cellHeight);
 		}
 		
@@ -165,7 +161,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			}
 		}
 	}
-	// function to determine if a click occured soon enough after the previous one to be a double-click.
+	// function to determine if a click occurred soon enough after the previous one to be a double-click.
 	public boolean doubleClick()
 	{
 		Date newClick = new Date();
@@ -188,11 +184,9 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		}
 	}
 	
+
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		
-
-		
 		
 		int a = (e.getX() - carNameWidth) / cellWidth;
 		int b = -1 + (e.getY()/cellHeight);
@@ -257,11 +251,27 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	
 	
 	public Dimension getPreferredSize() {
-		return new Dimension(calendarWidth, calendarHeight);
+		return new Dimension(calcWidth(), calcHeight());
 	}
 	
 	public Dimension getMinimumSize() {
 		return getPreferredSize();
+	}
+	
+	/**
+	 * Calculates the required width to display everything
+	 * @return Width of the calendar
+	 */
+	private int calcWidth() {
+		return carNameWidth + selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH) * cellWidth;
+	}
+	
+	/**
+	 * Calculates the required height to display everything
+	 * @return Height of the calendar
+	 */
+	private int calcHeight() {
+		return (cars.size() + 1) * cellHeight;
 	}
 	
 	
