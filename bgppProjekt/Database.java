@@ -1,15 +1,22 @@
 package bgppProjekt;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.RowId;
 import java.sql.SQLException;
 import com.mysql.jdbc.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
 
 
 public class Database {
 	static Date date;
+	static int carID;
+	static int phone;
+	static String CostumerName;
+	static int type;
+	static String carName;
+	
+
 		// connection objekt til databaseforbindelsen
 		private static Connection conn = null;
 		// driveren til databasen
@@ -86,38 +93,151 @@ public class Database {
 			catch (SQLException e) {
 				e.printStackTrace();
 			}
+		}*/
+	public static int getcarID(int id) {
+		try {
+		Statement select = conn.createStatement();		
+		String getIt = "SELECT * FROM Reservation WHERE id="+id;
+		ResultSet result = select.executeQuery(getIt);
+		result.next();
+		carID = result.getInt(2);		
+		System.out.println("carID = "+ carID);
+			}							
+		 catch (Exception e) {			
+			e.printStackTrace();
 		}
-	*/	
-		public static Date getStartDate(int id) {
+		return carID;			
+	}
+	public static int getPhone(int id) {
+		try {
+		Statement select = conn.createStatement();		
+		String getIt = "SELECT * FROM Reservation WHERE id="+id;
+		ResultSet result = select.executeQuery(getIt);
+		result.next();
+		phone = result.getInt(3);		
+		System.out.println("Phone Number = "+ phone);
+			}							
+		 catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return phone;			
+	}
+	public static String getCostumerName(int id) {
+		try {
+		Statement select = conn.createStatement();		
+		String getIt = "SELECT * FROM Reservation WHERE id="+id;
+		ResultSet result = select.executeQuery(getIt);
+		result.next();
+		CostumerName = result.getString(4);	
+		System.out.println("Name = "+ CostumerName);
+			}							
+		 catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return CostumerName;			
+	}
+	public static Date getStartDate(int id) {
 			try {
-			Statement select = conn.createStatement();
-			
-			String getIt = "SELECT id,start FROM `Reservation`";
+			Statement select = conn.createStatement();			
+			String getIt = "SELECT * FROM Reservation WHERE id="+id;
 			ResultSet result = select.executeQuery(getIt);
-			System.out.println(result);
-			//RowId derp = result.getRowId(id);
-			//((ResultSet) derp).getString(5);
+			result.next();
 			String startDate = result.getString(5);
-			System.out.println("Startdate = "+ startDate);
-			
-			//date = Date.valueOf(derp);
-			
-											}
-							
-			 catch (Exception e) {
-			
+			date = Date.valueOf(startDate);
+			System.out.println("Startdate = "+ date);
+				}							
+			 catch (Exception e) {			
 				e.printStackTrace();
 			}
-			System.out.println(date);
-			return date;
-			
+			return date;			
+		}	
+	public static Date getEndDate(int id) {
+			try {
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Reservation WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			String endDate = result.getString(5);
+			date = Date.valueOf(endDate);
+			System.out.println("endDate = "+ date);
+				}							
+			 catch (Exception e) {			
+				e.printStackTrace();
+			}
+			return date;			
 		}
-
-		// This method closes the database
-
+	public static int getType(int id) {
+		try {
+		Statement select = conn.createStatement();		
+		String getIt = "SELECT * FROM Car WHERE id="+id;
+		ResultSet result = select.executeQuery(getIt);
+		result.next();
+		int type = result.getInt(2);
+		System.out.println("Car:");
+		System.out.println("Type = "+ type);
+			}							
+		 catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return type;			
+	}	
+	public static String getCarName(int id) {
+		try {
+		Statement select = conn.createStatement();		
+		String getIt = "SELECT * FROM Car WHERE id="+id;
+		ResultSet result = select.executeQuery(getIt);
+		result.next();
+		String carName = result.getString(2);
+		System.out.println("Carname = "+ carName);
+			}							
+		 catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return carName;			
+	}			
+	
+	public static ArrayList<Car> initCars(){
+		ArrayList<Car> cars = new ArrayList<Car>();
+		try {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Car";
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			while (result.next()) {
+				int carID = result.getInt(1);
+				int type = result.getInt(2);
+				String name = result.getString(3);
+				CarType cType = null;
+				
+				if (type == 1){
+					cType = CarType.SEDAN;
+				}
+				else if (type == 2){
+					cType = CarType.VAN;
+				}
+				else if (type == 3){
+					cType = CarType.STATIONCAR;
+					}
+				else if (type == 4){
+					cType = CarType.SPORTSCAR;
+				}	
+				cars.add(new Car(cType, name, carID));
+								
+			}	
+		}
+		
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return cars;
+	}
+	
+	// This method closes the database
 	public void closeDb() {
 		try {
 			conn.close();
 		} catch(Exception e) {}
 	}
+
 }	
