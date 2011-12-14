@@ -79,31 +79,54 @@ public class GUI implements ActionListener {
 
 			}
 		});
-		
+
 		// bottom panel for actionbox and buttons
 		JPanel actionPanel = new JPanel();
 		actionPanel.setLayout(new BorderLayout());
 		contentPane.add(actionPanel, BorderLayout.SOUTH);
-		
+
 		// adding actionbox
-		ActionBox actionBox = new ActionBox();
+		final ActionBox actionBox = new ActionBox();
 		actionPanel.add(actionBox, BorderLayout.CENTER);
 
-		
-		
+
+
 		// Adding buttons 
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridLayout(3,1));
 		actionPanel.add(buttonPanel, BorderLayout.EAST);
-		
+
 		JButton editReservationButton = new JButton("Edit Selected Reservation");
-		JButton newReservationButton = new JButton("New Reservation");
-		JButton findButton = new JButton("Find...");
+		editReservationButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				actionBox.inspect(guiCalendar.getSelectedReservation());
+				
+			}
+		});
 		
+		JButton newReservationButton = new JButton("New Reservation");
+		newReservationButton.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				actionBox.newReservation();
+				
+			}
+		});
+		
+		JButton findButton = new JButton("Find...");
+		findButton.addActionListener(new ActionListener() {
+
+			public void actionPerformed(ActionEvent arg0) {
+				actionBox.find();
+
+			}
+		});
+
 		buttonPanel.add(editReservationButton);
 		buttonPanel.add(newReservationButton);
 		buttonPanel.add(findButton);
-		
+
 
 
 		frame.pack();
