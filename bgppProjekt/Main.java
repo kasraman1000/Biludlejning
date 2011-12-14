@@ -7,6 +7,7 @@ public class Main {
 		
 		Database.connect();
 		GUI gui = new GUI();
+		
 		//Database.select();
 		//Database.initiateDb();
 /*
