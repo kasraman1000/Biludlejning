@@ -99,8 +99,12 @@ public class GUI implements ActionListener {
 		JButton editReservationButton = new JButton("Edit Selected Reservation");
 		editReservationButton.addActionListener(new ActionListener() {
 			
-			public void actionPerformed(ActionEvent e) {
-				actionBox.inspect(guiCalendar.getSelectedReservation());
+			public void actionPerformed(ActionEvent e) 
+			{
+				if (guiCalendar.getSelectedReservation() != null) {
+					actionBox.inspect(guiCalendar.getSelectedReservation());
+				}
+				
 				
 			}
 		});
