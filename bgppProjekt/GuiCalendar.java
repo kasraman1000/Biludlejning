@@ -49,9 +49,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		cars = new ArrayList<Car>();
 		reservations = new ArrayList<Reservation>();
 
-		fillCars();
-		fillReservations();
+		
 
+		
+		
 		reload();
 	}
 
@@ -64,10 +65,11 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		selectedReservation = null;
 
 
-		fillGuiArray();
+		
 
 		repaint();
 	}
+	
 	/**
 	 * filling up the 2d array
 	 */
@@ -94,10 +96,13 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	}
 
 	/**
-	 * Filling out the cars array, for testing purposes
+	 * Filling out the cars array
 	 */
-	private void fillCars() {
-		cars = Database.initCars();
+	public void fillCars(ArrayList<Car> c) {
+		cars = c;
+		fillReservations();
+		fillGuiArray();
+		reload();
 	}
 
 	/**
@@ -105,7 +110,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 */
 	private void fillReservations() {
 
-		reservations.add(new Reservation(2, cars.get(0).getId(), new GregorianCalendar(2011,11,05), new GregorianCalendar(2011,11,13),"",""));
+		reservations.add(new Reservation(2, cars.get(0).getId(), new GregorianCalendar(2011,11,05), new GregorianCalendar(2011,11,13),"h","h"));
 		reservations.add(new Reservation(3, cars.get(1).getId(), new GregorianCalendar(2011,11,01), new GregorianCalendar(2011,11,14),"",""));
 		reservations.add(new Reservation(4, cars.get(2).getId(), new GregorianCalendar(2011,11,13), new GregorianCalendar(2011,11,15),"",""));
 		reservations.add(new Reservation(1, cars.get(3).getId(), new GregorianCalendar(2011,11,07), new GregorianCalendar(2011,11,12),"",""));

@@ -3,13 +3,18 @@ package bgppProjekt;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.GridLayout;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class ActionBox extends JPanel {
+	
+	private ArrayList<Car> cars;
 
 	// The layout manager for this panel
 	CardLayout cards;
@@ -47,6 +52,10 @@ public class ActionBox extends JPanel {
 
 	}
 	
+	public void fillCars(ArrayList<Car> c) {
+		cars = c;
+	}
+	
 	/**
 	 * Switches the ActionBox to 'find'-mode
 	 */
@@ -76,6 +85,7 @@ public class ActionBox extends JPanel {
 	public void inspect(Reservation reservation) {
 		System.out.println("Inspecting Reservation-object with ID: " + reservation.getId());
 		selectedReservation = reservation;
+		inspectBox.showReservation(selectedReservation);
 		
 		cards.show(this,"INSPECT");
 	}
@@ -89,6 +99,15 @@ public class ActionBox extends JPanel {
 		JTextField nameField;
 		JTextField phoneField;
 		JTextField carField;
+		
+		JPanel startDropdowns;
+		JPanel endDropdowns;
+		JComboBox<Integer> startDate;
+		JComboBox<Integer> startMonth;
+		JComboBox<Integer> startYear;
+		JComboBox<Integer> endDate;
+		JComboBox<Integer> endMonth;
+		JComboBox<Integer> endYear;
 		
 		public InspectBox() 
 		{
@@ -115,8 +134,55 @@ public class ActionBox extends JPanel {
 			carField = new JTextField();
 			dataPanel.add(carField);
 			
+			// dropdowns for starting date
 			dataPanel.add(new JLabel("Start Date: "));
-			dataPanel.add(new JLabel("End Date: "));
+			startDropdowns = new JPanel();
+			
+			startDate = new JComboBox<Integer>();
+			for (int i = 1; i <= 31; i++) {
+				startDate.addItem(i);
+			}
+			
+			startMonth = new JComboBox<Integer>();
+			for (int i = 1; i <= 12; i++) {
+				startMonth.addItem(i);
+			}
+			
+			startYear = new JComboBox<Integer>();
+			for (int i = 2000; i <= 2019; i++) {
+				startYear.addItem(i);
+			}
+			
+			startDropdowns.add(startDate);
+			startDropdowns.add(startMonth);
+			startDropdowns.add(startYear);
+			
+			dataPanel.add(startDropdowns);
+			
+			// dropdowns for end date
+			dataPanel.add(new JLabel("end Date: "));
+			endDropdowns = new JPanel();
+			
+			endDate = new JComboBox<Integer>();
+			for (int i = 1; i <= 31; i++) {
+				endDate.addItem(i);
+			}
+			
+			endMonth = new JComboBox<Integer>();
+			for (int i = 1; i <= 12; i++) {
+				endMonth.addItem(i);
+			}
+			
+			endYear = new JComboBox<Integer>();
+			for (int i = 2000; i <= 2019; i++) {
+				endYear.addItem(i);
+			}
+			
+			endDropdowns.add(endDate);
+			endDropdowns.add(endMonth);
+			endDropdowns.add(endYear);
+			
+			dataPanel.add(endDropdowns);
 			
 			add(dataPanel, BorderLayout.CENTER);
 			
@@ -134,9 +200,23 @@ public class ActionBox extends JPanel {
 		
 		public void showReservation(Reservation r) 
 		{
+			
 			nameField.setText(r.getCustomerName());
 			phoneField.setText(r.getCustomerPhone());
-			carField.setText(r.getCarId());
+			for (Car c : cars) {
+				if (c.getId() == r.getCarId()) {
+					carField.setText(c.getName());
+					System.out.println(c.getName());
+				}
+			}
+			
+			startDate.setSelectedItem(r.getStartingDate().get(Calendar.DATE));
+			startMonth.setSelectedItem(1 + r.getStartingDate().get(Calendar.MONTH));
+			startYear.setSelectedItem(r.getStartingDate().get(Calendar.YEAR));
+			endDate.setSelectedItem(r.getEndDate().get(Calendar.DATE));
+			endMonth.setSelectedItem(1 + r.getEndDate().get(Calendar.MONTH));
+			endYear.setSelectedItem(r.getEndDate().get(Calendar.YEAR));
+			
 		}
 	}
 

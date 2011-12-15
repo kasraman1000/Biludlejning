@@ -2,12 +2,17 @@ package bgppProjekt;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class GUI implements ActionListener {
+	
+	private ArrayList<Car> cars;
 
 	public GUI() {
+		cars = Database.initCars();
+		
 		makeFrame();
 	}
 
@@ -25,6 +30,9 @@ public class GUI implements ActionListener {
 		// Adding the Calendar
 		final GuiCalendar guiCalendar = new GuiCalendar(this);
 		contentPane.add(guiCalendar, BorderLayout.CENTER);
+		
+		System.out.println(cars.size());
+		guiCalendar.fillCars(cars);
 
 		// Adding dropdowns above the calendar
 		JPanel dropdowns = new JPanel();
@@ -88,6 +96,8 @@ public class GUI implements ActionListener {
 		// adding actionbox
 		final ActionBox actionBox = new ActionBox();
 		actionPanel.add(actionBox, BorderLayout.CENTER);
+		
+		actionBox.fillCars(cars);
 
 
 
