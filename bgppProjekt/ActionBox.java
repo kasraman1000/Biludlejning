@@ -7,6 +7,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,6 +25,7 @@ public class ActionBox extends JPanel {
 	InspectBox inspectBox;
 	JPanel searchBox;
 	NewReservationBox newReservationBox;
+	JPanel blankBox;
 
 	Reservation selectedReservation;
 
@@ -38,16 +40,18 @@ public class ActionBox extends JPanel {
 		searchBox = new JPanel();
 		inspectBox = new InspectBox();
 		newReservationBox = new NewReservationBox();
+		blankBox = new JPanel();
 
 		cards.addLayoutComponent(searchBox, "SEARCH");
 		cards.addLayoutComponent(inspectBox, "INSPECT");
 		cards.addLayoutComponent(newReservationBox, "NEW");
-
+		cards.addLayoutComponent(blankBox, "BLANK");
 
 
 		add(searchBox, "SEARCH");
 		add(inspectBox, "INSPECT");	
-		add(newReservationBox, "NEW");	
+		add(newReservationBox, "NEW");
+		add(blankBox, "BLANK");
 
 	}
 
@@ -191,7 +195,34 @@ public class ActionBox extends JPanel {
 			// Adding the buttons
 			buttonPanel = new JPanel();
 			JButton saveButton = new JButton("Save Changes");
+			saveButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Database.editReservation(
+							selectedReservation.getId(), 
+							selectedReservation.getCarId(), 
+							phoneField.getText(), 
+							nameField.getText(), 
+							new GregorianCalendar(
+									(int) startYear.getSelectedItem(), 
+									(int) startMonth.getSelectedItem() - 1, 
+									(int) startDate.getSelectedItem()), 
+							new GregorianCalendar(
+									(int) endYear.getSelectedItem(),  
+									(int) endMonth.getSelectedItem() - 1, 
+									(int) endDate.getSelectedItem()));
+					
+				}
+			});
+			
 			JButton deleteButton = new JButton("Delete Reservation");
+			deleteButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
+					Database.delReserv(selectedReservation.getId());
+					selectedReservation = null;
+					
+					cards.show(getParent(), "BLANK");
+				}
+			});
 
 			buttonPanel.add(saveButton);
 			buttonPanel.add(deleteButton);
@@ -275,7 +306,6 @@ public class ActionBox extends JPanel {
 					carList.removeAllItems();
 					for (Car c : cars) {
 						if (c.getType() == carTypeList.getSelectedItem()) {
-							System.out.println("adding " + c);
 							carList.addItem(c);
 						}
 					}
@@ -345,7 +375,32 @@ public class ActionBox extends JPanel {
 			// Adding the buttons
 			buttonPanel = new JPanel();
 			JButton addButton = new JButton("Add Reservation");
+			addButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					Database.newReservervation(
+							((Car) carList.getSelectedItem()).getId(), 
+							phoneField.getText(), 
+							nameField.getText(), 
+							new GregorianCalendar(
+									(int) startYear.getSelectedItem(), 
+									(int) startMonth.getSelectedItem() - 1, 
+									(int) startDate.getSelectedItem()), 
+							new GregorianCalendar(
+									(int) endYear.getSelectedItem(),  
+									(int) endMonth.getSelectedItem() - 1, 
+									(int) endDate.getSelectedItem()));
+					
+					cards.show(getParent(), "BLANK");
+					
+				}
+			});
+			
 			JButton cancelButton = new JButton("Cancel");
+			cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent arg0) {
+					cards.show(getParent(), "BLANK");	
+				}
+			});
 
 			buttonPanel.add(addButton);
 			buttonPanel.add(cancelButton);

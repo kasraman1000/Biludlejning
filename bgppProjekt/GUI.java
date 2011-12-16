@@ -5,6 +5,8 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 import javax.swing.*;
+import javax.swing.event.AncestorEvent;
+import javax.swing.event.AncestorListener;
 
 public class GUI implements ActionListener {
 	
@@ -97,6 +99,17 @@ public class GUI implements ActionListener {
 		// adding actionbox
 		final ActionBox actionBox = new ActionBox();
 		actionPanel.add(actionBox, BorderLayout.CENTER);
+		actionPanel.addAncestorListener(new AncestorListener() {
+			public void ancestorRemoved(AncestorEvent arg0) {
+				System.out.println("REMOVED!");
+			}
+			public void ancestorMoved(AncestorEvent arg0) {
+				System.out.println("MOVED!");
+			}
+			public void ancestorAdded(AncestorEvent arg0) {
+				System.out.println("ADDED!");
+			}
+		});
 		
 		actionBox.fillCars(cars);
 

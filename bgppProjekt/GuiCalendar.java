@@ -54,7 +54,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	/**
 	 * Makes the calendar load everything 
 	 */
-	private void reload() {
+	public void reload() {
 		//STILL NOT DONE
 		selectedReservation = null;
 
