@@ -25,7 +25,9 @@ public class Main {
 		*/
 		Database.initCars();
 		Database.initReservs();
-Database.getStartDate(1);
+		Database.getStartDate(1);
+		Database.delReserv(105);
+		Database.searchPhone("43521702");
 		
 
 
