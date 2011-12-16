@@ -273,29 +273,46 @@ public class Database {
 
 		return res;
 	}
-
-	public static ArrayList<Reservation> searchId(int id, GregorianCalendar calStart, GregorianCalendar calEnd) {
+	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
+	public static ArrayList<Reservation> grabMonth(int carType, GregorianCalendar monthStart, GregorianCalendar monthEnd) {
 		ArrayList<Car> cars = initCars();
 		ArrayList<Reservation> res = initReservs();
 		ArrayList<Reservation> outputRes = new ArrayList<Reservation>();
+		// Gets all the car ids from the reservations
 		for (Reservation r : res){
-			int carID = r.getCarId();			
-		for (Car c : cars){
-			if (c.getId() == carID) {
-				outputRes.add(r);
+			int carID = r.getCarId();	
+			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
+			for (Car c : cars){
+				if (c.getId() == carID) {
+					CarType cType = null;
+					int cTypeInt = 0;	
+
+					if (cType == CarType.SEDAN){
+						cTypeInt = 1;
+					}
+					else if (cType == CarType.VAN){
+						cTypeInt = 2;
+					}
+					else if (cType == CarType.STATIONCAR){
+						cTypeInt = 3;
+					}
+					else if (cType == CarType.SPORTSCAR){
+						cTypeInt = 4;
+					}
+					r.getEndDate();
+					// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
+					if (cTypeInt == carType && r.getEndDate().after(monthStart) == true && r.getStartingDate().before(monthEnd) == true){
+						outputRes.add(r);
+					}
+				}
 			}
+
+
 		}
-			
-			if (carID == id){
-				outputRes.add(r);
-			}
-		}
-		for (Reservation r : res){
-			if (res.contains(calStart)){
-				outputRes.add(r);
-			}
-		}
-	return res;
+		System.out.println(outputRes);
+		return outputRes;
+
+
 	}
 
 	// This method closes the database
