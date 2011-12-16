@@ -6,6 +6,7 @@ import com.mysql.jdbc.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 
 public class Database {
@@ -15,71 +16,71 @@ public class Database {
 	static String CostumerName;
 	static int type;
 	static String carName;
-	
 
-		// connection objekt til databaseforbindelsen
-		private static Connection conn = null;
-		// driveren til databasen
-		private static String driver = "com.mysql.jdbc.Driver";		
-		private static String dbName = "BiludlejningCrelde";
-		private static String username = "Crelde", password = "bil";
-		
-		public static Boolean connect() {
-			boolean isConnected = false;
-			// Here we connect to the database
-			try {
-				Class.forName(driver);
-				conn = (Connection) DriverManager.getConnection("jdbc:mysql://" +
-						"mysql.itu.dk/" + dbName, username, password);
-				isConnected = true;
-				if (isConnected = true){
-					System.out.println("Winner winner chicken dinner");
-				}
-			
-			} catch (Exception e) {
-				System.out.println("Fail to connect db");
-			}			
-			return isConnected;
-		}
-		public static void initiateDb() {
-			try {
-				System.out.println("sup we are 1 line below try, trololo lazy");
-				Statement initiate = conn.createStatement();
-				initiate.executeUpdate(
-				"CREATE TABLE Car"+
-				"(id int(11) NOT NULL auto_increment," +
-				"`type` int(11) NOT NULL,"+
-				"`name` text NOT NULL,"+
-				"PRIMARY KEY (id))"+
-				"ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;");
-				
-				
-				initiate.executeUpdate(
-			
-				"CREATE TABLE Reservation"+
-				"(id int(11) NOT NULL auto_increment,"+
-				"`carID` int(11) NOT NULL,"+
-				"`phone` int(11) NOT NULL,"+
-				"`name` text NOT NULL,"+
-				"`start` date NOT NULL,"+
-				"`end` date NOT NULL,"+
-				"PRIMARY KEY (id))"+
-				"ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;");
-			
+
+	// connection objekt til databaseforbindelsen
+	private static Connection conn = null;
+	// driveren til databasen
+	private static String driver = "com.mysql.jdbc.Driver";		
+	private static String dbName = "BiludlejningCrelde";
+	private static String username = "Crelde", password = "bil";
+
+	public static Boolean connect() {
+		boolean isConnected = false;
+		// Here we connect to the database
+		try {
+			Class.forName(driver);
+			conn = (Connection) DriverManager.getConnection("jdbc:mysql://" +
+					"mysql.itu.dk/" + dbName, username, password);
+			isConnected = true;
+			if (isConnected = true){
+				System.out.println("Winner winner chicken dinner");
+			}
+
+		} catch (Exception e) {
+			System.out.println("Fail to connect db");
+		}			
+		return isConnected;
+	}
+	public static void initiateDb() {
+		try {
+			System.out.println("sup we are 1 line below try, trololo lazy");
+			Statement initiate = conn.createStatement();
+			initiate.executeUpdate(
+					"CREATE TABLE Car"+
+							"(id int(11) NOT NULL auto_increment," +
+							"`type` int(11) NOT NULL,"+
+							"`name` text NOT NULL,"+
+							"PRIMARY KEY (id))"+
+					"ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;");
+
+
+			initiate.executeUpdate(
+
+					"CREATE TABLE Reservation"+
+							"(id int(11) NOT NULL auto_increment,"+
+							"`carID` int(11) NOT NULL,"+
+							"`phone` int(11) NOT NULL,"+
+							"`name` text NOT NULL,"+
+							"`start` date NOT NULL,"+
+							"`end` date NOT NULL,"+
+							"PRIMARY KEY (id))"+
+					"ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;");
+
 
 		}				catch (SQLException e){
-				e.printStackTrace();
-				}
-			System.out.println("gotta catch em all");
+			e.printStackTrace();
 		}
-	
-/*		public static void select() {
+		System.out.println("gotta catch em all");
+	}
+
+	/*		public static void select() {
 			try {
 				Statement select = conn.createStatement();
 				String getIt = "SELECT * FROM `Reservation`";
 				ResultSet result = select.executeQuery(getIt);
-				
-				
+
+
 				System.out.println("Crelde owns so he brought results!");
 				while (result.next()) {
 					int id = result.getInt(1);
@@ -96,48 +97,48 @@ public class Database {
 		}*/
 	public static int getcarID(int id) {
 		try {
-		Statement select = conn.createStatement();		
-		String getIt = "SELECT * FROM Reservation WHERE id="+id;
-		ResultSet result = select.executeQuery(getIt);
-		result.next();
-		carID = result.getInt(2);		
-		System.out.println("carID = "+ carID);
-			}							
-		 catch (Exception e) {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Reservation WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			carID = result.getInt(2);		
+			System.out.println("carID = "+ carID);
+		}							
+		catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return carID;			
 	}
 	public static int getPhone(int id) {
 		try {
-		Statement select = conn.createStatement();		
-		String getIt = "SELECT * FROM Reservation WHERE id="+id;
-		ResultSet result = select.executeQuery(getIt);
-		result.next();
-		phone = result.getInt(3);		
-		System.out.println("Phone Number = "+ phone);
-			}							
-		 catch (Exception e) {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Reservation WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			phone = result.getInt(3);		
+			System.out.println("Phone Number = "+ phone);
+		}							
+		catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return phone;			
 	}
 	public static String getCostumerName(int id) {
 		try {
-		Statement select = conn.createStatement();		
-		String getIt = "SELECT * FROM Reservation WHERE id="+id;
-		ResultSet result = select.executeQuery(getIt);
-		result.next();
-		CostumerName = result.getString(4);	
-		System.out.println("Name = "+ CostumerName);
-			}							
-		 catch (Exception e) {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Reservation WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			CostumerName = result.getString(4);	
+			System.out.println("Name = "+ CostumerName);
+		}							
+		catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return CostumerName;			
 	}
 	public static Date getStartDate(int id) {
-			try {
+		try {
 			Statement select = conn.createStatement();			
 			String getIt = "SELECT * FROM Reservation WHERE id="+id;
 			ResultSet result = select.executeQuery(getIt);
@@ -145,14 +146,14 @@ public class Database {
 			String startDate = result.getString(5);
 			date = Date.valueOf(startDate);
 			System.out.println("Startdate = "+ date);
-				}							
-			 catch (Exception e) {			
-				e.printStackTrace();
-			}
-			return date;			
-		}	
+		}							
+		catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return date;			
+	}	
 	public static Date getEndDate(int id) {
-			try {
+		try {
 			Statement select = conn.createStatement();		
 			String getIt = "SELECT * FROM Reservation WHERE id="+id;
 			ResultSet result = select.executeQuery(getIt);
@@ -160,42 +161,42 @@ public class Database {
 			String endDate = result.getString(5);
 			date = Date.valueOf(endDate);
 			System.out.println("endDate = "+ date);
-				}							
-			 catch (Exception e) {			
-				e.printStackTrace();
-			}
-			return date;			
+		}							
+		catch (Exception e) {			
+			e.printStackTrace();
 		}
+		return date;			
+	}
 	public static int getType(int id) {
 		try {
-		Statement select = conn.createStatement();		
-		String getIt = "SELECT * FROM Car WHERE id="+id;
-		ResultSet result = select.executeQuery(getIt);
-		result.next();
-		int type = result.getInt(2);
-		System.out.println("Car:");
-		System.out.println("Type = "+ type);
-			}							
-		 catch (Exception e) {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Car WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			int type = result.getInt(2);
+			System.out.println("Car:");
+			System.out.println("Type = "+ type);
+		}							
+		catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return type;			
 	}	
 	public static String getCarName(int id) {
 		try {
-		Statement select = conn.createStatement();		
-		String getIt = "SELECT * FROM Car WHERE id="+id;
-		ResultSet result = select.executeQuery(getIt);
-		result.next();
-		String carName = result.getString(2);
-		System.out.println("Carname = "+ carName);
-			}							
-		 catch (Exception e) {			
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Car WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			String carName = result.getString(2);
+			System.out.println("Carname = "+ carName);
+		}							
+		catch (Exception e) {			
 			e.printStackTrace();
 		}
 		return carName;			
 	}			
-	
+
 	public static ArrayList<Car> initCars(){
 		ArrayList<Car> cars = new ArrayList<Car>();
 		try {			
@@ -208,7 +209,7 @@ public class Database {
 				int type = result.getInt(2);
 				String name = result.getString(3);
 				CarType cType = null;
-				
+
 				if (type == 1){
 					cType = CarType.SEDAN;
 				}
@@ -217,22 +218,49 @@ public class Database {
 				}
 				else if (type == 3){
 					cType = CarType.STATIONCAR;
-					}
+				}
 				else if (type == 4){
 					cType = CarType.SPORTSCAR;
 				}	
 				cars.add(new Car(cType, name, carID));
-								
+
 			}	
 		}
-		
+
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return cars;
 	}
-	
+	// Function that takes all the relevant information to create a new Reservation entry in the database.
+	public static void newReservervation(int cId, String phone, String name, GregorianCalendar start, GregorianCalendar end) {
+		try {
+			java.sql.Date startD = new Date(start.getTimeInMillis());
+			System.out.println(startD);
+			Date endD = new Date(end.getTimeInMillis());
+			System.out.println(endD);
+			Statement select = conn.createStatement();	
+			select.executeUpdate("INSERT INTO `Reservation` (`carID`, `phone`, `name`, `start`, `end`) VALUES ('" + cId + "', '" + phone + "', '" +  name + "', '" + startD + "', '" + endD + "');");
+		}							
+		catch (Exception e) {			
+			e.printStackTrace();
+		}			
+	}
+	// Edits a given reservation fields in the database.
+	public static void editReservation(int id, int cId, String phone, String name, GregorianCalendar start, GregorianCalendar end) {
+		try {
+			java.sql.Date startD = new Date(start.getTimeInMillis());
+			System.out.println(startD);
+			Date endD = new Date(end.getTimeInMillis());
+			System.out.println(endD);
+			Statement select = conn.createStatement();	
+			select.executeUpdate("UPDATE `Reservation` SET `carID`='" + cId + "', `phone`='" + phone + "', `name`='" +  name + "', `start`='" + startD + "', `end`='" + endD + "' WHERE `id`='" + id + "';");
+		}							
+		catch (Exception e) {			
+			e.printStackTrace();
+		}		
+	}
 	// This method closes the database
 	public void closeDb() {
 		try {
