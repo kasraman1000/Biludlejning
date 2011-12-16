@@ -275,10 +275,24 @@ public class Database {
 	}
 	
 	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
-	public static ArrayList<Reservation> grabMonth(int carType, GregorianCalendar monthStart, GregorianCalendar monthEnd) {
+	public static ArrayList<Reservation> grabMonth(CarType carType, GregorianCalendar month) {
 		ArrayList<Car> cars = initCars();
 		ArrayList<Reservation> res = initReservs();
 		ArrayList<Reservation> outputRes = new ArrayList<Reservation>();
+		
+		// Figure out start and end of month
+		GregorianCalendar monthStart = new GregorianCalendar(
+				month.get(Calendar.YEAR), 
+				month.get(Calendar.MONTH), 
+				month.getActualMinimum(Calendar.DAY_OF_MONTH));
+		monthStart.add(Calendar.DAY_OF_MONTH, -1);
+		
+		GregorianCalendar monthEnd = new GregorianCalendar(
+				month.get(Calendar.YEAR), 
+				month.get(Calendar.MONTH), 
+				month.getActualMaximum(Calendar.DAY_OF_MONTH));
+		monthStart.add(Calendar.DAY_OF_MONTH, 1);
+		
 		// Gets all the car ids from the reservations
 		CarType cType = null;
 		for (Reservation r : res){
@@ -289,23 +303,23 @@ public class Database {
 					cType = c.getType();
 				}
 			}
-			int cTypeInt = 0;	
-
-			if (cType == CarType.SEDAN){
-				cTypeInt = 1;
-			}
-			else if (cType == CarType.VAN){
-				cTypeInt = 2;
-			}
-			else if (cType == CarType.STATIONCAR){
-				cTypeInt = 3;
-			}
-			else if (cType == CarType.SPORTSCAR){
-				cTypeInt = 4;
-			}
+//			int cTypeInt = 0;	
+//
+//			if (cType == CarType.SEDAN){
+//				cTypeInt = 1;
+//			}
+//			else if (cType == CarType.VAN){
+//				cTypeInt = 2;
+//			}
+//			else if (cType == CarType.STATIONCAR){
+//				cTypeInt = 3;
+//			}
+//			else if (cType == CarType.SPORTSCAR){
+//				cTypeInt = 4;
+//			}
 			r.getEndDate();
 			// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
-			if (cTypeInt == carType && r.getEndDate().after(monthStart) == true && r.getStartingDate().before(monthEnd) == true){
+			if (cType == carType && r.getEndDate().after(monthStart) == true && r.getStartingDate().before(monthEnd) == true){
 				outputRes.add(r);
 			}
 
