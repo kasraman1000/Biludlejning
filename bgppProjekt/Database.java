@@ -108,7 +108,7 @@ public class Database {
 		}
 		return carID;			
 	}
-	public static int getPhone(int id) {
+	public static int z(int id) {
 		try {
 		Statement select = conn.createStatement();		
 		String getIt = "SELECT * FROM Reservation WHERE id="+id;

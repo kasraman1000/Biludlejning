@@ -44,5 +44,8 @@ public class Car {
 		return id;
 	}
 	
+	public String toString() {
+		return getName();
+	}
 
 }
