@@ -31,10 +31,10 @@ public class GUI implements ActionListener {
 		final GuiCalendar guiCalendar = new GuiCalendar(this);
 		contentPane.add(guiCalendar, BorderLayout.CENTER);
 		
-		System.out.println(cars.size());
 		guiCalendar.fillCars(cars);
 
 		// Adding dropdowns above the calendar
+	
 		JPanel dropdowns = new JPanel();
 		dropdowns.setLayout(new FlowLayout(FlowLayout.CENTER));
 
@@ -146,6 +146,7 @@ public class GUI implements ActionListener {
 
 		frame.pack();
 		frame.setVisible(true);
+		System.out.println("Going visible!");
 
 
 	}

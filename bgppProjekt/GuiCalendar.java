@@ -49,11 +49,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		cars = new ArrayList<Car>();
 		reservations = new ArrayList<Reservation>();
 
-		
-
-		
-		
-		reload();
 	}
 
 	/**
@@ -106,7 +101,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * Filling out the reservations array, for testing purposes
 	 */
 	private void fillReservations() {
-		reservations = Database.grabMonth();
+		reservations = Database.grabMonth(selectedCarType, selectedMonth);
 	}
 
 
@@ -215,6 +210,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			}
 		}
 		System.out.println("CLICKED");
+		System.out.println("selectedReservID " + selectedReservation.getId());
 
 
 		repaint();

@@ -277,6 +277,7 @@ public class Database {
 	
 	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
 	public static ArrayList<Reservation> grabMonth(CarType carType, GregorianCalendar month) {
+		System.out.println("Pulling from Database...");
 		ArrayList<Car> cars = initCars();
 		ArrayList<Reservation> res = initReservs();
 		ArrayList<Reservation> outputRes = new ArrayList<Reservation>();
@@ -284,13 +285,13 @@ public class Database {
 		// Figure out start and end of month
 		GregorianCalendar monthStart = new GregorianCalendar(
 				month.get(Calendar.YEAR), 
-				month.get(Calendar.MONTH), 
+				month.get(Calendar.MONTH) - 1, 
 				month.getActualMinimum(Calendar.DAY_OF_MONTH));
 		monthStart.add(Calendar.DAY_OF_MONTH, -1);
 		
 		GregorianCalendar monthEnd = new GregorianCalendar(
 				month.get(Calendar.YEAR), 
-				month.get(Calendar.MONTH), 
+				month.get(Calendar.MONTH) - 1, 
 				month.getActualMaximum(Calendar.DAY_OF_MONTH));
 		monthStart.add(Calendar.DAY_OF_MONTH, 1);
 		
@@ -304,34 +305,17 @@ public class Database {
 					cType = c.getType();
 				}
 			}
-//			int cTypeInt = 0;	
-//
-//			if (cType == CarType.SEDAN){
-//				cTypeInt = 1;
-//			}
-//			else if (cType == CarType.VAN){
-//				cTypeInt = 2;
-//			}
-//			else if (cType == CarType.STATIONCAR){
-//				cTypeInt = 3;
-//			}
-//			else if (cType == CarType.SPORTSCAR){
-//				cTypeInt = 4;
-//			}
-			r.getEndDate();
+			
 			// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
 			if (cType == carType && r.getEndDate().after(monthStart) == true && r.getStartingDate().before(monthEnd) == true){
 				outputRes.add(r);
+				System.out.println("This reservation has ID: "+ r.getId());
+				System.out.println("This reservation starts: "+ r.getStartingDate().get(Calendar.DAY_OF_MONTH));
 			}
 
-
-
-
 		}
-		System.out.println(outputRes);
+		System.out.println("Total size of outputRes: " + outputRes.size());
 		return outputRes;
-
-
 	}
 
 	// This method closes the database
