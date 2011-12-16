@@ -177,7 +177,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		}
 	}
 	// function to determine if a click occurred soon enough after the previous one to be a double-click.
-	public boolean doubleClick()
+	private boolean doubleClick()
 	{
 		Date newClick = new Date();
 		long duration = 1000;
@@ -197,7 +197,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	}
 
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 
 		int a = (e.getX() - carNameWidth) / cellWidth;
@@ -230,28 +229,20 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		clickCount=clickCount+1;
 	}
 
-	@Override
 	public void mouseEntered(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
 	public void mouseExited(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
 	public void mousePressed(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
-	@Override
 	public void mouseReleased(MouseEvent arg0) {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	/**
@@ -320,7 +311,14 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @return Height of the calendar
 	 */
 	private int calcHeight() {
-		return (cars.size() + 1) * cellHeight;
+		int numCars = 0;
+		for (Car c : cars) {
+			if (c.getType() == selectedCarType) {
+				numCars++;
+			}
+		}
+		
+		return (numCars + 1) * cellHeight;
 	}
 
 

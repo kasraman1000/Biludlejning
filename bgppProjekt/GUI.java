@@ -22,7 +22,7 @@ public class GUI implements ActionListener {
 	private void makeFrame() {
 		System.out.println("Making the primary JFrame");
 
-		JFrame frame = new JFrame("Biludlejning");
+		final JFrame frame = new JFrame("Biludlejning");
 		Container contentPane = frame.getContentPane();
 
 		contentPane.setLayout(new BorderLayout());
@@ -50,6 +50,7 @@ public class GUI implements ActionListener {
 
 			public void actionPerformed(ActionEvent e) {
 				guiCalendar.setSelectedCarType((CarType) carTypeList.getSelectedItem());
+				frame.validate();
 
 			}
 		});
