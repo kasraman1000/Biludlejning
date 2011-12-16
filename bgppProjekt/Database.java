@@ -244,14 +244,17 @@ public class Database {
 
 	public static ArrayList<Reservation> initReservs(){
 		ArrayList<Reservation> res = new ArrayList<Reservation>();
-		GregorianCalendar cal = new GregorianCalendar();
-		GregorianCalendar cal1 = new GregorianCalendar();
+		GregorianCalendar cal;
+		GregorianCalendar cal1;
 
 		try {			
 			Statement select = conn.createStatement();		
 			String getIt = "SELECT * FROM Reservation";
 			ResultSet result = select.executeQuery(getIt);
 			while (result.next()) {
+				cal = new GregorianCalendar();
+				cal1 = new GregorianCalendar();
+				
 				int id = result.getInt(1);
 				int carID = result.getInt(2);
 				String phone = result.getString(3);
@@ -262,6 +265,8 @@ public class Database {
 				String endDate = result.getString(6);
 				date1 = Date.valueOf(endDate);
 				cal1.setTime(date1);
+				
+				System.out.println(cal1.get(Calendar.DAY_OF_MONTH));
 
 				res.add(new Reservation(id, carID, cal, cal1, phone, name));
 			}	
@@ -270,6 +275,10 @@ public class Database {
 
 		catch (Exception e) {
 			e.printStackTrace();
+		}
+		
+		for (Reservation r : res) {
+			System.out.println("Day: " + r.getEndDate().get(Calendar.DAY_OF_MONTH));
 		}
 
 		return res;
@@ -285,19 +294,22 @@ public class Database {
 		// Figure out start and end of month
 		GregorianCalendar monthStart = new GregorianCalendar(
 				month.get(Calendar.YEAR), 
-				month.get(Calendar.MONTH) - 1, 
+				month.get(Calendar.MONTH), 
 				month.getActualMinimum(Calendar.DAY_OF_MONTH));
 		monthStart.add(Calendar.DAY_OF_MONTH, -1);
 		
+		System.out.println(month.get(Calendar.MONTH));
+		
 		GregorianCalendar monthEnd = new GregorianCalendar(
 				month.get(Calendar.YEAR), 
-				month.get(Calendar.MONTH) - 1, 
+				month.get(Calendar.MONTH), 
 				month.getActualMaximum(Calendar.DAY_OF_MONTH));
 		monthStart.add(Calendar.DAY_OF_MONTH, 1);
 		
 		// Gets all the car ids from the reservations
 		CarType cType = null;
 		for (Reservation r : res){
+
 			int carID = r.getCarId();	
 			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
 			for (Car c : cars){
@@ -309,8 +321,6 @@ public class Database {
 			// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
 			if (cType == carType && r.getEndDate().after(monthStart) == true && r.getStartingDate().before(monthEnd) == true){
 				outputRes.add(r);
-				System.out.println("This reservation has ID: "+ r.getId());
-				System.out.println("This reservation starts: "+ r.getStartingDate().get(Calendar.DAY_OF_MONTH));
 			}
 
 		}

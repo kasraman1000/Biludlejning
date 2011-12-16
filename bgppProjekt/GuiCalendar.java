@@ -68,18 +68,29 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * filling up the 2d array
 	 */
 	private void fillGuiArray() {
-		guiArray = new Reservation[cars.size()][selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH)];
+		int numCars = calcCars();
+		ArrayList<Car> selectedCars = new ArrayList<Car>();
+		
+		for (Car c : cars) {
+			if (c.getType() == selectedCarType) {
+				selectedCars.add(c);
+			}
+		}
+		
+		guiArray = new Reservation[numCars][selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH)];
 
-		for (int c = 0; c < cars.size(); c++){
+		for (int c = 0; c < numCars; c++){
 			for (Reservation r : reservations) {
-				if (r.getCarId() == cars.get(c).getId()) {
+				if (r.getCarId() == selectedCars.get(c).getId()) {
 					GregorianCalendar date = (GregorianCalendar) r.getStartingDate().clone();
 					GregorianCalendar end = (GregorianCalendar) r.getEndDate().clone();
-					end.roll(Calendar.DATE, true);
+					end.add(Calendar.DATE, 1);
 
 					while (date.before(end)) {
+						System.out.println("Adding reservation " + r.getId() + " to coords: " + c + ",\t" + (date.get(Calendar.DATE)-1));
 						guiArray[c][date.get(Calendar.DATE) - 1] = r;
-						date.roll(Calendar.DATE, true);
+						date.add(Calendar.DATE, 1);
+						
 					}
 
 				}
@@ -102,6 +113,8 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 */
 	private void fillReservations() {
 		reservations = Database.grabMonth(selectedCarType, selectedMonth);
+		
+		
 	}
 
 
@@ -139,27 +152,29 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		for (Reservation r : reservations) {
 			int carNumber = 1;
 			for (Car c : cars) {
-				if (c.getId() == r.getCarId()) {
-					if (r == selectedReservation) {
-						g.setColor(Color.ORANGE);
-					}
-					else {
-						g.setColor(Color.RED);
-					}
+				if (c.getType() == selectedCarType) {
+					if (c.getId() == r.getCarId()) {
+						if (r == selectedReservation) {
+							g.setColor(Color.ORANGE);
+						}
+						else {
+							g.setColor(Color.RED);
+						}
 
-					g.fillRect(
-							carNameWidth + (r.getStartingDate().get(Calendar.DATE) - 1) * cellWidth, 
-							carNumber * cellHeight, 
-							(1 + r.getEndDate().get(Calendar.DATE) - r.getStartingDate().get(Calendar.DATE)) * cellWidth, 
-							cellHeight);
-					g.setColor(Color.BLACK);
-					g.drawRect(
-							carNameWidth + (r.getStartingDate().get(Calendar.DATE) - 1) * cellWidth, 
-							carNumber * cellHeight, 
-							(1 + r.getEndDate().get(Calendar.DATE) - r.getStartingDate().get(Calendar.DATE)) * cellWidth, 
-							cellHeight);
+						g.fillRect(
+								carNameWidth + (r.getStartingDate().get(Calendar.DATE) - 1) * cellWidth, 
+								carNumber * cellHeight, 
+								(1 + r.getEndDate().get(Calendar.DATE) - r.getStartingDate().get(Calendar.DATE)) * cellWidth, 
+								cellHeight);
+						g.setColor(Color.BLACK);
+						g.drawRect(
+								carNameWidth + (r.getStartingDate().get(Calendar.DATE) - 1) * cellWidth, 
+								carNumber * cellHeight, 
+								(1 + r.getEndDate().get(Calendar.DATE) - r.getStartingDate().get(Calendar.DATE)) * cellWidth, 
+								cellHeight);
+					}
+					carNumber++;
 				}
-				carNumber++;
 			}
 		}
 	}
@@ -210,8 +225,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			}
 		}
 		System.out.println("CLICKED");
-		System.out.println("selectedReservID " + selectedReservation.getId());
-
 
 		repaint();
 		clickCount=clickCount+1;
@@ -299,14 +312,17 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @return Height of the calendar
 	 */
 	private int calcHeight() {
+		return (calcCars() + 1) * cellHeight;
+	}
+	
+	private int calcCars() {
 		int numCars = 0;
 		for (Car c : cars) {
 			if (c.getType() == selectedCarType) {
 				numCars++;
 			}
 		}
-		
-		return (numCars + 1) * cellHeight;
+		return numCars;
 	}
 
 

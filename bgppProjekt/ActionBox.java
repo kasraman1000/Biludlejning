@@ -213,10 +213,10 @@ public class ActionBox extends JPanel {
 			}
 
 			startDate.setSelectedItem(r.getStartingDate().get(Calendar.DATE));
-			startMonth.setSelectedItem(1 + r.getStartingDate().get(Calendar.MONTH));
+			startMonth.setSelectedItem(2 + r.getStartingDate().get(Calendar.MONTH));
 			startYear.setSelectedItem(r.getStartingDate().get(Calendar.YEAR));
 			endDate.setSelectedItem(r.getEndDate().get(Calendar.DATE));
-			endMonth.setSelectedItem(1 + r.getEndDate().get(Calendar.MONTH));
+			endMonth.setSelectedItem(2 + r.getEndDate().get(Calendar.MONTH));
 			endYear.setSelectedItem(r.getEndDate().get(Calendar.YEAR));
 
 		}

@@ -152,7 +152,7 @@ public class GUI implements ActionListener {
 	}
 
 	public void doubleClicked() {
-
+		// dunno what to do here, can't make shit work
 	}
 
 	public void actionPerformed(ActionEvent e) {
