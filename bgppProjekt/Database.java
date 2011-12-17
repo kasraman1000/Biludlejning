@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import com.mysql.jdbc.Connection;
 import java.sql.Statement;
 import java.sql.ResultSet;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -165,41 +166,85 @@ public class Database {
 					cType = c.getType();
 				}
 			}
+			
 			ArrayList<Reservation> res = grabPeriod(cType, r.getStartingDate(), r.getEndDate());
 			int cId = r.getCarId();
 			String phone = r.getCustomerPhone();
 			String name = r.getCustomerName();
 			GregorianCalendar start = r.getStartingDate();
 			GregorianCalendar end = r.getEndDate();
-			boolean startCheck = true;
-			boolean endCheck = true;
-			boolean isOccupied = false;
-			for (Reservation re : res){
-				//STARTCHECK
-				if (r.getStartingDate().after(re.getEndDate()) == true ){
-					startCheck = true;
-				}
-				else {
-					startCheck = false;
-				}
-				//ENDCHECK
-				if (r.getEndDate().before(re.getStartingDate()) == true){
-					endCheck = true;
-				}
-				else {
-					endCheck = false;
-				}
-				if (startCheck == true && endCheck == false || startCheck == false && endCheck == true){
-					//Reservation is valid, and does not interfere with other reservations.
-					isOccupied = false;
-				}
-				else if (startCheck == true && endCheck == true || startCheck == false && endCheck == false){
-					//First case: Both are true, (r) starts before (re), and ends before 
-					//Second Case: Reservation is "inside" of another, meaning it starts after another and ends before the other one does.
-					isOccupied = true;
-				}
-			}
-			if (isOccupied == false){
+					ArrayList<Reservation> reservArray = initReservs();
+					int inputId = 1;
+					boolean check1=false;
+					boolean check2=false;
+					boolean check3=false;
+					boolean check4=false;
+					boolean check5=false;
+					boolean check6=false;
+					boolean wasOccupied=true;
+
+					for (Reservation reserv : reservArray)
+					{
+						if (reserv.getCarId()==inputId){
+							//CASE 1:
+							if (r.getEndDate().before(reserv.getStartingDate()) == true && r.getStartingDate().before(reserv.getStartingDate())){
+								check1=true;
+								System.out.println("check1 true");
+							}
+							else check1=false;
+
+							//CASE2:
+
+							if (r.getStartingDate().after(reserv.getEndDate()) == true && r.getEndDate().before(reserv.getEndDate())){
+								check2=true;
+								System.out.println("check2 true");
+							}
+							else check2=false;
+							
+							//CASE3:
+							
+							if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate())){
+								check3=true;
+								System.out.println("check3 true");
+							}
+							else check3=false;
+
+							//CASE4:
+							if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate()) && r.getEndDate().after(reserv.getStartingDate())){
+								check4=true;
+								System.out.println("check4 true");
+							}
+							else check4=false;
+							
+							//CASE5:
+							if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate()) && r.getStartingDate().before(reserv.getEndDate())){
+								check5=true;
+								System.out.println("check5 true");
+							}
+							else check5=false;
+							
+							//CASE6:
+							
+							if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate())){
+								check6=true;
+								System.out.println("check6 true");
+							}
+							else check6=false;					
+						}
+						if (check3==true || check4 == true || check5 == true || check6==true)
+						{
+							System.out.println("denied, inteferred with existing reservations");
+							wasOccupied = true;
+							break;
+						}
+						else if (check1 == true || check2 == true){
+							System.out.println("dates were fine, creating new reservation");	
+							wasOccupied = false;
+						}
+					}
+					
+
+				if (wasOccupied ==false){
 				java.sql.Date startD = new Date(start.getTimeInMillis());
 				System.out.println(startD);
 				Date endD = new Date(end.getTimeInMillis());
@@ -214,62 +259,79 @@ public class Database {
 	}
 	// Edits a given reservation fields in the database.
 	public static void editReservation(Reservation r) {
-		try {
-			ArrayList<Car> cars = initCars();
-			CarType cType = null;
-			int carID = r.getCarId();	
-			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
-			for (Car c : cars){
-				if (c.getId() == carID) {
-					cType = c.getType();
-				}
-			}
-			ArrayList<Reservation> res = grabPeriod(cType, r.getStartingDate(), r.getEndDate());
-			int cId = r.getCarId();
-			String phone = r.getCustomerPhone();
-			String name = r.getCustomerName();
-			GregorianCalendar start = r.getStartingDate();
-			GregorianCalendar end = r.getEndDate();
-			boolean startCheck = true;
-			boolean endCheck = true;
-			boolean isOccupied = false;
-			for (Reservation re : res){
-				//STARTCHECK
-				if (r.getStartingDate().after(re.getEndDate()) == true ){
-					startCheck = true;
-				}
-				else {
-					startCheck = false;
-				}
-				//ENDCHECK
-				if (r.getEndDate().before(re.getStartingDate()) == true){
-					endCheck = true;
-				}
-				else {
-					endCheck = false;
-				}
-				if (startCheck == true && endCheck == false || startCheck == false && endCheck == true){
-					//Reservation is valid, and does not interfere with other reservations.
-					isOccupied = false;
-				}
-				else if (startCheck == true && endCheck == true || startCheck == false && endCheck == false){
-					//First case: Both are true, (r) starts before (re), and ends before 
-					//Second Case: Reservation is "inside" of another, meaning it starts after another and ends before the other one does.
-					isOccupied = true;
-				}
-			}
-			if (isOccupied == false){
-				java.sql.Date startD = new Date(start.getTimeInMillis());
-				System.out.println(startD);
-				Date endD = new Date(end.getTimeInMillis());
-				System.out.println(endD);
-				Statement select = conn.createStatement();	
-				select.executeUpdate("UPDATE `Reservation` SET `carID`='" + cId + "', `phone`='" + phone + "', `name`='" +  name + "', `start`='" + startD + "', `end`='" + endD + "' WHERE `id`='" + id + "';");
-			}
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
+//		try {
+//			ArrayList<Car> cars = initCars();
+//			CarType cType = null;
+//			int carID = r.getCarId();	
+//			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
+//			for (Car c : cars){
+//				if (c.getId() == carID) {
+//					cType = c.getType();
+//				}
+//			}
+//			//			ArrayList<Reservation> res = grabPeriod(cType, r.getStartingDate(), r.getEndDate());
+//			ArrayList<Reservation> res = initReservs();
+//			int cId = r.getCarId();
+//			String phone = r.getCustomerPhone();
+//			String name = r.getCustomerName();
+//			GregorianCalendar start = r.getStartingDate();
+//			GregorianCalendar end = r.getEndDate();
+//
+//			//System.out.println(r.getEndDate());
+//			boolean startCheck = true;
+//			boolean endCheck = true;
+//			boolean isOccupied = false;
+//			for (Reservation re : res){
+//				if (r.getId()!=re.getId())
+//					System.out.println(r.getID);
+//				{
+//					//STARTCHECK
+//					if (r.getStartingDate().after(re.getEndDate()) == true ){
+//
+//						startCheck = true;
+//					}
+//					else {
+//						SimpleDateFormat sdf1 = new SimpleDateFormat("dd.MM.yy");
+//						SimpleDateFormat sdf2 = new SimpleDateFormat("dd.MM.yy");
+//						String dato1 = sdf1.format(r.getStartingDate().getTime());
+//						String dato2 = sdf2.format(re.getEndDate().getTime());
+//						System.out.println(dato1);
+//						System.out.println(dato2);
+//						startCheck = false;
+//					}
+//					//ENDCHECK
+//					if (r.getEndDate().before(re.getStartingDate()) == true){
+//						endCheck = true;
+//					}
+//					else {
+//						endCheck = false;
+//					}
+//					if (startCheck == true && endCheck == false || startCheck == false && endCheck == true){
+//						//Reservation is valid, and does not interfere with other reservations.
+//						isOccupied = false;
+//					}
+//					else if (startCheck == true && endCheck == true || startCheck == false && endCheck == false){
+//						//First case: Both are true, (r) starts before (re), and ends before 
+//						//Second Case: Reservation is "inside" of another, meaning it starts after another and ends before the other one does.
+//						isOccupied = true;
+//						System.out.println("start =" + startCheck );
+//						System.out.println("end =" + endCheck);
+//						System.out.println("isOccupied ="+ isOccupied);
+//					}
+//				}
+//				if (isOccupied == false){
+//					java.sql.Date startD = new Date(start.getTimeInMillis());
+//					System.out.println(startD);
+//					Date endD = new Date(end.getTimeInMillis());
+//					System.out.println(endD);
+//					Statement select = conn.createStatement();	
+//					select.executeUpdate("UPDATE `Reservation` SET `carID`='" + cId + "', `phone`='" + phone + "', `name`='" +  name + "', `start`='" + startD + "', `end`='" + endD + "' WHERE `id`='" + id + "';");
+//				}
+//			}	
+//		}
+//		catch (Exception e) {			
+//			e.printStackTrace();
+//		}
 	}
 	// Returns the phone number of the	 costumer, in the reservation table
 	public static String getPhone(int id) {
@@ -466,7 +528,6 @@ public class Database {
 			}
 			if (isInMonth == true){				
 				outputRes.add(r);
-				System.out.println("we just added " + r + " to the array of reservations being shown");
 			}
 		}
 
