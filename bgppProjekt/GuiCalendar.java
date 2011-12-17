@@ -86,7 +86,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 
 					while (date.before(end)) {
 						if (date.get(Calendar.MONTH) == selectedMonth.get(Calendar.MONTH)) {
-							System.out.println("Adding reservation " + r + " to coords: " + c + ",\t" + (date.get(Calendar.DATE)-1));
 							guiArray[c][date.get(Calendar.DATE) - 1] = r;
 						}
 						date.add(Calendar.DATE, 1);
@@ -171,14 +170,12 @@ public class GuiCalendar extends JComponent implements MouseListener {
 						GregorianCalendar start = (GregorianCalendar) r.getStartingDate().clone();
 						
 						while (start.get(Calendar.MONTH) != selectedMonth.get(Calendar.MONTH)) {
-							System.out.println(start.get(Calendar.MONTH) + "-" + start.get(Calendar.DAY_OF_MONTH) + " is out of bounds, raising...");
 							start.add(Calendar.DAY_OF_MONTH, 1);
 						}
 						
 						GregorianCalendar end = (GregorianCalendar) r.getEndDate().clone();
 						
 						while (end.get(Calendar.MONTH) != selectedMonth.get(Calendar.MONTH)) {
-							System.out.println(end.get(Calendar.MONTH) + "-" + end.get(Calendar.DAY_OF_MONTH) + " is out of bounds, lowering...");
 							end.add(Calendar.DAY_OF_MONTH, -1);
 						}
 						
