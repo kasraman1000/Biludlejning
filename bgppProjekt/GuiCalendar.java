@@ -55,8 +55,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * Makes the calendar load everything 
 	 */
 	public void reload() {
-		//STILL NOT DONE
-		selectedReservation = null;
 
 		fillReservations();
 		fillGuiArray();	
@@ -245,25 +243,37 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	}
 
 	/**
-	 * 
 	 * @return The currently selected Reservation
 	 */
 	public Reservation getSelectedReservation(){
 		return selectedReservation;
 	}
 
+	/**
+	 * @return The currently selected Month
+	 */
 	public int getSelectedMonth() {
 		return selectedMonth.get(Calendar.MONTH);
 	}
 
+	/**
+	 * @return The currently selected Year
+	 */
 	public int getSelectedYear() {
 		return selectedMonth.get(Calendar.YEAR);
 	}
 
+	/**
+	 * @return The currently selected Car Type
+	 */
 	public CarType getSelectedCarType() {
 		return selectedCarType;
 	}
 
+	/**
+	 * Sets the selected month to show
+	 * @param i The number of the month (0-11)
+	 */
 	public void setSelectedMonth(int i) {
 		System.out.println("Changing selected month to: " + i);
 		selectedMonth = new GregorianCalendar(
@@ -273,6 +283,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		reload();
 	}
 
+	/**
+	 * Sets the selected year to show
+	 * @param i The number of the year
+	 */
 	public void setSelectedYear(int i) {
 		System.out.println("Changing selected year to: " + i);
 		selectedMonth = new GregorianCalendar(
@@ -282,9 +296,22 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		reload();
 	}
 
+	/**
+	 * Sets the selected Car Type to list
+	 * @param c The Car Type to list
+	 */
 	public void setSelectedCarType(CarType c) {
 		System.out.println("Changing selected car type to: " + c);
 		selectedCarType = c;
+		reload();
+	}
+	
+	/**
+	 * Sets the currently selected reservation
+	 * @param r The reservation to select
+	 */
+	public void setSelectedReservation(Reservation r) {
+		selectedReservation = r;
 		reload();
 	}
 

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -15,30 +16,33 @@ import javax.swing.JTextField;
 
 public class NewReservationBox extends JPanel
 {
-	JPanel dataPanel;
-	JPanel buttonPanel; 
-	JTextField nameField;
-	JTextField phoneField;
+	
+	private ArrayList<Car> cars;
+	
+	private JPanel dataPanel;
 
-	JPanel carPanel;
-	JComboBox<CarType> carTypeList;
-	JComboBox<Car> carList;
+	private JTextField nameField;
+	private JTextField phoneField;
+ 
+	private JPanel carPanel;
+	private JComboBox<CarType> carTypeList;
+	private JComboBox<Car> carList;
 
-	JPanel startDropdowns;
-	JPanel endDropdowns;
-	JComboBox<Integer> startDate;
-	JComboBox<Integer> startMonth;
-	JComboBox<Integer> startYear;
-	JComboBox<Integer> endDate;
-	JComboBox<Integer> endMonth;
-	JComboBox<Integer> endYear;
-
+	private JPanel startDropdowns;
+	private JPanel endDropdowns;
+	private JComboBox<Integer> startDate;
+	private JComboBox<Integer> startMonth;
+	private JComboBox<Integer> startYear;
+	private JComboBox<Integer> endDate;
+	private JComboBox<Integer> endMonth;
+	private JComboBox<Integer> endYear;
+ 
+	private JPanel buttonPanel;
+	private JButton addButton;
+	private JButton cancelButton;
+	
+	
 	public NewReservationBox() 
-	{
-		makeFrame();
-	}
-
-	private void makeFrame() 
 	{
 		setLayout(new BorderLayout());
 
@@ -134,41 +138,54 @@ public class NewReservationBox extends JPanel
 
 		// Adding the buttons
 		buttonPanel = new JPanel();
-		JButton addButton = new JButton("Add Reservation");
-		addButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//TODO outsource to GUI controller
-				Database.newReservervation(
-						((Car) carList.getSelectedItem()).getId(), 
-						phoneField.getText(), 
-						nameField.getText(), 
-						new GregorianCalendar(
-								(int) startYear.getSelectedItem(), 
-								(int) startMonth.getSelectedItem() - 1, 
-								(int) startDate.getSelectedItem()), 
-								new GregorianCalendar(
-										(int) endYear.getSelectedItem(),  
-										(int) endMonth.getSelectedItem() - 1, 
-										(int) endDate.getSelectedItem()));
+		addButton = new JButton("Add Reservation");
 
-				cards.show(getParent(), "BLANK");
-
-			}
-		});
-
-		JButton cancelButton = new JButton("Cancel");
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent arg0) {
-				//TODO outsource to GUI controller
-				cards.show(getParent(), "BLANK");	
-			}
-		});
+		cancelButton = new JButton("Cancel");
 
 		buttonPanel.add(addButton);
 		buttonPanel.add(cancelButton);
 
 		add(buttonPanel, BorderLayout.SOUTH);
+	}
 
+	public void fillCars(ArrayList<Car> c) {
+		cars = c;
+	}
+	
+	/**
+	 * @return the addButton
+	 */
+	public JButton getAddButton() {
+		return addButton;
+	}
+
+	/**
+	 * @return the cancelButton
+	 */
+	public JButton getCancelButton() {
+		return cancelButton;
+	}
+	
+	/**
+	 * Constructs a new Reservation-object from the data in the fields
+	 * @return A new Reservation-object
+	 */
+	public Reservation getNewReservation() {
+		Reservation r = new Reservation(
+				0,		// Does not have a database ID yet
+				((Car) carList.getSelectedItem()).getId(),
+				new GregorianCalendar(
+						(int) startYear.getSelectedItem(), 
+						(int) startMonth.getSelectedItem() - 1, 
+						(int) startDate.getSelectedItem()),
+				new GregorianCalendar(
+						(int) endYear.getSelectedItem(),  
+						(int) endMonth.getSelectedItem() - 1, 
+						(int) endDate.getSelectedItem()),
+				phoneField.getText(),
+				nameField.getText());
+		
+		return r;
 	}
 
 	/**

@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -24,36 +25,36 @@ public class GUI implements ActionListener {
 
 	// Interface components //
 	// the Main frame (window)
-	final JFrame frame;
-	Container contentPane;
+	private final JFrame frame;
+	private Container contentPane;
 
 	// The graphical Calendar
-	final GuiCalendar guiCalendar;
+	private final GuiCalendar guiCalendar;
 
 	// Dropdowns above the Calendar
-	JPanel dropdowns;
-	final JComboBox<CarType> carTypeList;
-	final JComboBox<String> monthList;
-	final JComboBox<Integer> yearList;
+	private JPanel dropdowns;
+	private final JComboBox<CarType> carTypeList;
+	private final JComboBox<String> monthList;
+	private final JComboBox<Integer> yearList;
 
 	// Bottom Panel
-	JPanel actionPanel;
-	final JPanel actionBox;
-	JPanel buttonPanel;
+	private JPanel actionPanel;
+	private final JPanel actionBox;
+	private JPanel buttonPanel;
 
 	// Buttons at bottom Panel (Outside Actionbox)
-	JButton editReservationButton;
-	JButton newReservationButton;
-	JButton findButton;
+	private JButton editReservationButton;
+	private JButton newReservationButton;
+	private JButton findButton;
 	
 	// Layout Manager for the ActionBox
-	CardLayout actionCards;
+	private CardLayout actionCards;
 	
 	// Panels/States for the ActionBox
-	InspectBox inspectBox;
-	SearchBox searchBox;
-	NewReservationBox newReservationBox;
-	JPanel blankBox;
+	private InspectBox inspectBox;
+	private SearchBox searchBox;
+	private NewReservationBox newReservationBox;
+	private JPanel blankBox;
 
 
 	public GUI() {
@@ -140,7 +141,17 @@ public class GUI implements ActionListener {
 		
 		searchBox = new SearchBox();
 		inspectBox = new InspectBox();
+		inspectBox.fillCars(cars);
+		inspectBox.getSaveButton().addActionListener(new SaveReservationListener());
+		inspectBox.getDeleteButton().addActionListener(new DeleteReservationListener());
+		
 		newReservationBox = new NewReservationBox();
+		newReservationBox.fillCars(cars);
+		newReservationBox.getAddButton().addActionListener(new AddNewReservationListener());
+		newReservationBox.getCancelButton().addActionListener(new CancelNewReservationListener());
+		
+		
+		
 		blankBox = new JPanel();
 		
 		actionCards.addLayoutComponent(searchBox, "SEARCH");
@@ -226,6 +237,74 @@ public class GUI implements ActionListener {
 	{
 		public void actionPerformed(ActionEvent e) {
 			actionCards.show(actionBox, "SEARCH");
+		}
+	}
+
+	// Invoked when the "Add"-button inside the
+	// New Reservation Panel has been pressed
+	private class AddNewReservationListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			Reservation r = newReservationBox.getNewReservation();
+			Database.newReservervation(r);
+			
+			CarType t = CarType.SEDAN;
+			for (Car c: cars) {
+				if (r.getCarId() == c.getId()) {
+					t = c.getType();
+				}
+			}
+			
+			
+			carTypeList.setSelectedItem(t);
+			monthList.setSelectedIndex(r.getStartingDate().get(Calendar.MONTH));
+			yearList.setSelectedItem(r.getStartingDate().get(Calendar.YEAR));
+			guiCalendar.setSelectedReservation(r); // This doesn't really work at all =/
+			
+			actionCards.show(actionBox, "BLANK");
+		}
+	}
+	
+	// Invoked when the "Cancel"-button inside the
+	// New Reservation Panel has been pressed
+	private class CancelNewReservationListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			actionCards.show(actionBox, "BLANK");
+		}
+	}
+	
+	// Invoked when the "Save"-button inside the
+	// Edit Reservation Panel has been pressed
+	private class SaveReservationListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			Reservation r = inspectBox.getNewReservation();
+			Database.editReservation(r);
+			
+			CarType t = CarType.SEDAN;
+			for (Car c: cars) {
+				if (r.getCarId() == c.getId()) {
+					t = c.getType();
+				}
+			}
+
+			guiCalendar.setSelectedReservation(r); // This doesn't really work at all =/
+			
+			actionCards.show(actionBox, "BLANK");
+		}
+	}
+	
+	// Invoked when the "Delete"-button inside the
+	// Edit Reservation Panel has been pressed
+	private class DeleteReservationListener implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) {
+			Database.delReserv(selectedReservation.getId());
+			selectedReservation = null;
+			guiCalendar.setSelectedReservation(null);
+
+			actionCards.show(actionBox, "BLANK");
 		}
 	}
 

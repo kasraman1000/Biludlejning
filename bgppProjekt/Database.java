@@ -154,8 +154,17 @@ public class Database {
 		return cars;
 	}
 	// Function that takes all the relevant information to create a new Reservation entry in the database.
-	public static void newReservervation(int cId, String phone, String name, GregorianCalendar start, GregorianCalendar end) {
+	public static void newReservervation(Reservation r) {
 		try {
+			
+			int cId = r.getCarId();
+			String phone = r.getCustomerPhone();
+			String name = r.getCustomerName();
+			GregorianCalendar start = r.getStartingDate();
+			GregorianCalendar end = r.getEndDate();
+			
+			
+			
 			java.sql.Date startD = new Date(start.getTimeInMillis());
 			System.out.println(startD);
 			Date endD = new Date(end.getTimeInMillis());
@@ -168,8 +177,15 @@ public class Database {
 		}			
 	}
 	// Edits a given reservation fields in the database.
-	public static void editReservation(int id, int cId, String phone, String name, GregorianCalendar start, GregorianCalendar end) {
+	public static void editReservation(Reservation r) {
 		try {
+			int id = r.getId();
+			int cId = r.getCarId();
+			String phone = r.getCustomerPhone();
+			String name = r.getCustomerName();
+			GregorianCalendar start = r.getStartingDate();
+			GregorianCalendar end = r.getEndDate();
+			
 			java.sql.Date startD = new Date(start.getTimeInMillis());
 			System.out.println(startD);
 			Date endD = new Date(end.getTimeInMillis());

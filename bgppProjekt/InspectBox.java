@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -15,20 +16,27 @@ import javax.swing.JTextField;
 
 public class InspectBox extends JPanel 
 {
-	JPanel dataPanel;
-	JPanel buttonPanel; 
-	JTextField nameField;
-	JTextField phoneField;
-	JTextField carField;
+	private ArrayList<Car> cars;
+	private Reservation selectedReservation;
+	
+	private JPanel dataPanel;
+	
+	private JTextField nameField;
+	private JTextField phoneField;
+	private JTextField carField;
 
-	JPanel startDropdowns;
-	JPanel endDropdowns;
-	JComboBox<Integer> startDate;
-	JComboBox<Integer> startMonth;
-	JComboBox<Integer> startYear;
-	JComboBox<Integer> endDate;
-	JComboBox<Integer> endMonth;
-	JComboBox<Integer> endYear;
+	private JPanel startDropdowns;
+	private JPanel endDropdowns;
+	private JComboBox<Integer> startDate;
+	private JComboBox<Integer> startMonth;
+	private JComboBox<Integer> startYear;
+	private JComboBox<Integer> endDate;
+	private JComboBox<Integer> endMonth;
+	private JComboBox<Integer> endYear;
+	
+	private JPanel buttonPanel; 
+	private JButton saveButton;
+	private JButton deleteButton;
 
 	public InspectBox() 
 	{
@@ -110,37 +118,9 @@ public class InspectBox extends JPanel
 
 		// Adding the buttons
 		buttonPanel = new JPanel();
-		JButton saveButton = new JButton("Save Changes");
-		saveButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//TODO outsource to GUI controller
-				Database.editReservation(
-						selectedReservation.getId(), 
-						selectedReservation.getCarId(), 
-						phoneField.getText(), 
-						nameField.getText(), 
-						new GregorianCalendar(
-								(int) startYear.getSelectedItem(), 
-								(int) startMonth.getSelectedItem() - 1, 
-								(int) startDate.getSelectedItem()), 
-								new GregorianCalendar(
-										(int) endYear.getSelectedItem(),  
-										(int) endMonth.getSelectedItem() - 1, 
-										(int) endDate.getSelectedItem()));
+		saveButton = new JButton("Save Changes");
 
-			}
-		});
-
-		JButton deleteButton = new JButton("Delete Reservation");
-		deleteButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				//TODO outsource to GUI controller
-				Database.delReserv(selectedReservation.getId());
-				selectedReservation = null;
-
-				cards.show(getParent(), "BLANK");
-			}
-		});
+		deleteButton = new JButton("Delete Reservation");
 
 		buttonPanel.add(saveButton);
 		buttonPanel.add(deleteButton);
@@ -149,12 +129,54 @@ public class InspectBox extends JPanel
 
 	}
 	
+	public void fillCars(ArrayList<Car> c) {
+		cars = c;
+	}
+	
+	/**
+	 * Constructs a new Reservation-object from the data in the fields
+	 * The database ID of the reservation is preserved
+	 * @return A new Reservation-object
+	 */
+	public Reservation getNewReservation() {
+		Reservation r = new Reservation(
+				selectedReservation.getId(),		// Does not have a database ID yet
+				selectedReservation.getCarId(),
+				new GregorianCalendar(
+						(int) startYear.getSelectedItem(), 
+						(int) startMonth.getSelectedItem() - 1, 
+						(int) startDate.getSelectedItem()),
+				new GregorianCalendar(
+						(int) endYear.getSelectedItem(),  
+						(int) endMonth.getSelectedItem() - 1, 
+						(int) endDate.getSelectedItem()),
+				phoneField.getText(),
+				nameField.getText());
+		
+		return r;
+	}
+	
+	/**
+	 * @return the saveButton
+	 */
+	public JButton getSaveButton() {
+		return saveButton;
+	}
+
+	/**
+	 * @return the deleteButton
+	 */
+	public JButton getDeleteButton() {
+		return deleteButton;
+	}
+
 	/**
 	 * Fills out the datafields with data from a reservation-object
 	 * @param r The reservation to be shown
 	 */
 	public void showReservation(Reservation r) 
 	{
+		selectedReservation = r;
 
 		nameField.setText(r.getCustomerName());
 		phoneField.setText(r.getCustomerPhone());
@@ -166,10 +188,10 @@ public class InspectBox extends JPanel
 		}
 
 		startDate.setSelectedItem(r.getStartingDate().get(Calendar.DATE));
-		startMonth.setSelectedItem(2 + r.getStartingDate().get(Calendar.MONTH));
+		startMonth.setSelectedItem(1 + r.getStartingDate().get(Calendar.MONTH));
 		startYear.setSelectedItem(r.getStartingDate().get(Calendar.YEAR));
 		endDate.setSelectedItem(r.getEndDate().get(Calendar.DATE));
-		endMonth.setSelectedItem(2 + r.getEndDate().get(Calendar.MONTH));
+		endMonth.setSelectedItem(1 + r.getEndDate().get(Calendar.MONTH));
 		endYear.setSelectedItem(r.getEndDate().get(Calendar.YEAR));
 
 	}
