@@ -12,6 +12,12 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
 
+/**
+ * One of the ActionBox Panels, this one handles creating the interface fo5 searching through all reservations.
+ * 
+ *
+ */
+
 public class SearchBox extends JPanel
 {
 	JList<Reservation> list;

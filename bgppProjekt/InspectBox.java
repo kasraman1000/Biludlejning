@@ -14,6 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * One of the ActionBox panels, this one handles creating the interface for editing exsisting selected reservations
+ * 
+ * 
+ */
+
 public class InspectBox extends JPanel 
 {
 	private ArrayList<Car> cars;

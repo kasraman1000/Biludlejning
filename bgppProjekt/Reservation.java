@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
 /**
  * A class to represent a single Reservation entity from the database
  * 
- * @author
  *
  */
 public class Reservation {

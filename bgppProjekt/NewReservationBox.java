@@ -14,6 +14,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+/**
+ * One of the ActionBox Panels, this one handles creating the interface for creation of of new reservations
+ * 
+ * 
+ */
+
 public class NewReservationBox extends JPanel
 {
 	
