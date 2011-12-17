@@ -9,17 +9,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
 
 public class GUI implements ActionListener {
 	// List of all cars
 	private ArrayList<Car> cars;
-	
+
 	// The reservation currently being edited
 	private Reservation selectedReservation;
 
@@ -46,10 +47,10 @@ public class GUI implements ActionListener {
 	private JButton editReservationButton;
 	private JButton newReservationButton;
 	private JButton findButton;
-	
+
 	// Layout Manager for the ActionBox
 	private CardLayout actionCards;
-	
+
 	// Panels/States for the ActionBox
 	private InspectBox inspectBox;
 	private SearchBox searchBox;
@@ -132,28 +133,28 @@ public class GUI implements ActionListener {
 		buttonPanel.add(editReservationButton);
 		buttonPanel.add(newReservationButton);
 		buttonPanel.add(findButton);
-		
+
 		// Adding actionbox
 		actionBox = new JPanel();
 		actionCards = new CardLayout();
 		actionBox.setLayout(actionCards);
 		actionPanel.add(actionBox, BorderLayout.CENTER);
-		
+
 		searchBox = new SearchBox();
 		inspectBox = new InspectBox();
 		inspectBox.fillCars(cars);
 		inspectBox.getSaveButton().addActionListener(new SaveReservationListener());
 		inspectBox.getDeleteButton().addActionListener(new DeleteReservationListener());
-		
+
 		newReservationBox = new NewReservationBox();
 		newReservationBox.fillCars(cars);
 		newReservationBox.getAddButton().addActionListener(new AddNewReservationListener());
 		newReservationBox.getCancelButton().addActionListener(new CancelNewReservationListener());
-		
-		
-		
+
+
+
 		blankBox = new JPanel();
-		
+
 		actionCards.addLayoutComponent(searchBox, "SEARCH");
 		actionCards.addLayoutComponent(inspectBox, "INSPECT");
 		actionCards.addLayoutComponent(newReservationBox, "NEW");
@@ -163,9 +164,9 @@ public class GUI implements ActionListener {
 		actionBox.add(inspectBox, "INSPECT");	
 		actionBox.add(newReservationBox, "NEW");
 		actionBox.add(blankBox, "BLANK");
-		
-		
-		
+
+
+
 
 		frame.pack();
 		frame.setVisible(true);
@@ -182,9 +183,8 @@ public class GUI implements ActionListener {
 		System.out.println("Recieved action: " + e.getActionCommand());
 	}
 
-
 	// Eventlisteners //
-	
+
 	// Invoked when the car type dropdown has been used
 	private class CarTypeListListener implements ActionListener
 	{
@@ -231,7 +231,7 @@ public class GUI implements ActionListener {
 			actionCards.show(actionBox, "NEW");
 		}
 	}
-	
+
 	// Invoked when the "Find"-button has been pressed
 	private class FindButtonListener implements ActionListener
 	{
@@ -246,25 +246,43 @@ public class GUI implements ActionListener {
 	{
 		public void actionPerformed(ActionEvent e) {
 			Reservation r = newReservationBox.getNewReservation();
-			Database.newReservervation(r);
-			
-			CarType t = CarType.SEDAN;
-			for (Car c: cars) {
-				if (r.getCarId() == c.getId()) {
-					t = c.getType();
-				}
+			if (r.getStartingDate().after(r.getEndDate()))
+			{
+				//Warning message telling the user the ending date has to be after the starting date.
+				JOptionPane.showMessageDialog(frame,
+						"The ending date has to be after the starting date",
+						"Error!",
+						JOptionPane.WARNING_MESSAGE); 
 			}
-			
-			
-			carTypeList.setSelectedItem(t);
-			monthList.setSelectedIndex(r.getStartingDate().get(Calendar.MONTH));
-			yearList.setSelectedItem(r.getStartingDate().get(Calendar.YEAR));
-			guiCalendar.setSelectedReservation(r); // This doesn't really work at all =/
-			
-			actionCards.show(actionBox, "BLANK");
+
+			else
+			{
+				boolean overlapped = Database.newReservervation(r);
+				if (overlapped == false){
+					//Warning message telling the user the ending date has to be after the starting date.
+					JOptionPane.showMessageDialog(frame,
+							"Your reservation cannont be created as the car is already occupied on the specified date.",
+							"Error!",
+							JOptionPane.WARNING_MESSAGE); 
+				}
+				else{
+					CarType t = CarType.SEDAN;
+					for (Car c: cars) {
+						if (r.getCarId() == c.getId()) {
+							t = c.getType();
+						}
+					}
+					carTypeList.setSelectedItem(t);
+					monthList.setSelectedIndex(r.getStartingDate().get(Calendar.MONTH));
+					yearList.setSelectedItem(r.getStartingDate().get(Calendar.YEAR));
+					guiCalendar.setSelectedReservation(r); // This doesn't really work at all =/
+
+					actionCards.show(actionBox, "BLANK");
+				}	
+			}
 		}
 	}
-	
+
 	// Invoked when the "Cancel"-button inside the
 	// New Reservation Panel has been pressed
 	private class CancelNewReservationListener implements ActionListener
@@ -273,28 +291,37 @@ public class GUI implements ActionListener {
 			actionCards.show(actionBox, "BLANK");
 		}
 	}
-	
+
 	// Invoked when the "Save"-button inside the
 	// Edit Reservation Panel has been pressed
 	private class SaveReservationListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
 			Reservation r = inspectBox.getNewReservation();
-			Database.editReservation(r);
-			
-			CarType t = CarType.SEDAN;
-			for (Car c: cars) {
-				if (r.getCarId() == c.getId()) {
-					t = c.getType();
+			boolean success = Database.editReservation(r);
+			if (success == false){
+				//Warning message telling the user the ending date has to be after the starting date.
+				JOptionPane.showMessageDialog(frame,
+						"Your reservation cannont be edited as the car is already occupied on the specified date.",
+						"Error!",
+						JOptionPane.WARNING_MESSAGE); 
+			}
+			else{
+				CarType t = CarType.SEDAN;
+				for (Car c: cars) {
+					if (r.getCarId() == c.getId()) {
+						t = c.getType();
+					}
 				}
+
+				guiCalendar.setSelectedReservation(r); // This doesn't really work at all =/
+
+				actionCards.show(actionBox, "BLANK");
 			}
 
-			guiCalendar.setSelectedReservation(r); // This doesn't really work at all =/
-			
-			actionCards.show(actionBox, "BLANK");
 		}
 	}
-	
+
 	// Invoked when the "Delete"-button inside the
 	// Edit Reservation Panel has been pressed
 	private class DeleteReservationListener implements ActionListener
