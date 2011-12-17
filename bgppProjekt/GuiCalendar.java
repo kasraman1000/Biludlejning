@@ -39,7 +39,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	private GUI gui;
 
 	public GuiCalendar(GUI g) {
-		this.addMouseListener(this);
+		addMouseListener(this);
 
 		gui = g;
 
@@ -109,12 +109,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	}
 
 	/**
-	 * Filling out the reservations array, for testing purposes
+	 * Filling out the reservations array
 	 */
 	private void fillReservations() {
 		reservations = Database.grabMonth(selectedCarType, selectedMonth);
-		
-		
 	}
 
 
