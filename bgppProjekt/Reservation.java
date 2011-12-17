@@ -6,7 +6,7 @@ import java.util.GregorianCalendar;
 /**
  * A class to represent a single Reservation entity from the database
  * 
- * @author Kasra Tahmasebi
+ * @author
  *
  */
 public class Reservation {
@@ -79,41 +79,6 @@ public class Reservation {
 			return customerName;
 		}
 
-		/**
-		 * @param car the car to set
-		 */
-		public void setCar(int carId) {
-			this.carId = carId;
-		}
-
-		/**
-		 * @param startingDate the startingDate to set
-		 */
-		public void setStartingDate(GregorianCalendar startingDate) {
-			this.startingDate = startingDate;
-		}
-
-		/**
-		 * @param endDate the endDate to set
-		 */
-		public void setEndDate(GregorianCalendar endDate) {
-			this.endDate = endDate;
-		}
-
-		/**
-		 * @param customerPhone the customerPhone to set
-		 */
-		public void setCustomerPhone(String customerPhone) {
-			this.customerPhone = customerPhone;
-		}
-
-		/**
-		 * @param customerName the customerName to set
-		 */
-		public void setCustomerName(String customerName) {
-			this.customerName = customerName;
-		}
-		
 		public String toString() {
 			String s = new String();
 			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");

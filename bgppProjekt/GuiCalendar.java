@@ -11,9 +11,7 @@ import java.util.Date;
 /**
  * The calendar graphical module, showing reservations on a monthly basis
  * 
- * It's not finished though, it needs the following:
- * 	A way to change the month and car-type shown
- * 	It needs to somehow hook up with a database and pull those data (month/reservations)
+ *
  */
 public class GuiCalendar extends JComponent implements MouseListener {
 	

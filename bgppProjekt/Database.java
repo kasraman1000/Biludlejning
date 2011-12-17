@@ -9,6 +9,12 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+/**
+ * Class containing all functions handled between our program and the database.
+ * 
+ * 
+ */
+
 public class Database {
 	static Date date;
 	static Date date1;	
@@ -71,53 +77,6 @@ public class Database {
 		}
 		System.out.println("gotta catch em all");
 	}
-	// Returns id of the car in the reservation table
-	public static int getcarID(int id) {
-		try {
-			Statement select = conn.createStatement();		
-			String getIt = "SELECT * FROM Reservation WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			carID = result.getInt(2);		
-			System.out.println("carID = "+ carID);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return carID;			
-	}
-
-	// Returns the name of the car in the Cars table
-	public static String getCarName(int id) {
-		try {
-			Statement select = conn.createStatement();		
-			String getIt = "SELECT * FROM Car WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			String carName = result.getString(2);
-			System.out.println("Carname = "+ carName);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return carName;			
-	}			
-	// Returns the type of car in the Cars table (as an int)
-	public static int getType(int id) {
-		try {
-			Statement select = conn.createStatement();		
-			String getIt = "SELECT * FROM Car WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			int type = result.getInt(2);
-			System.out.println("Car:");
-			System.out.println("Type = "+ type);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return type;			
-	}	
 	// Returns an ArrayList of all the Car objects in the database
 	public static ArrayList<Car> initCars(){
 		ArrayList<Car> cars = new ArrayList<Car>();
@@ -398,95 +357,6 @@ public class Database {
 		}
 		return success;
 	}
-	// Returns the phone number of the costumer, in the reservation table
-	public static String getPhone(int id) {
-		try {
-			Statement select = conn.createStatement();		
-			String getIt = "SELECT * FROM Reservation WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			phone = result.getString(3);		
-			System.out.println("Phone Number = "+ phone);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return phone;			
-	}
-	// Returns the name of the costumer, in the reservation table
-	public static String getCostumerName(int id) {
-		try {
-			Statement select = conn.createStatement();		
-			String getIt = "SELECT * FROM Reservation WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			CostumerName = result.getString(4);	
-			System.out.println("Name = "+ CostumerName);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return CostumerName;			
-	}
-	// Returns the starting date of the reservation in a GregorianCalendar format
-	public static GregorianCalendar getStartDate(int id) {
-		GregorianCalendar cal = new GregorianCalendar();
-		try {
-			Statement select = conn.createStatement();			
-			String getIt = "SELECT * FROM Reservation WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			String startDate = result.getString(5);
-			date = Date.valueOf(startDate);
-			cal.setTime(date);
-			System.out.println("Startdate = "+ cal);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return cal;			
-	}	
-	// Returns the ending date of the reservation in a GregorianCalendar format
-	public static GregorianCalendar getEndDate(int id) {
-		GregorianCalendar cal = new GregorianCalendar();
-		try {
-			Statement select = conn.createStatement();		
-			String getIt = "SELECT * FROM Reservation WHERE id="+id;
-			ResultSet result = select.executeQuery(getIt);
-			result.next();
-			String endDate = result.getString(5);
-			date = Date.valueOf(endDate);
-			cal.setTime(date);
-			System.out.println("endDate = "+ cal);
-		}							
-		catch (Exception e) {			
-			e.printStackTrace();
-		}
-		return cal;			
-	}
-	// Returns the reservation by id
-	public static Reservation getReserv(int id){
-		Reservation resid;
-		carID = getcarID(id);
-		phone = getPhone(id);
-		CostumerName = getCostumerName(id);
-		GregorianCalendar greg1 = getStartDate(id);
-		GregorianCalendar greg2 = getEndDate(id);
-
-		resid = new Reservation(id, carID, greg1, greg2, phone, CostumerName);
-		return resid;
-	}
-	// Returns and ArrayList of the Reservations that match the phonenumber
-	public static ArrayList<Reservation> searchPhone(String phone){
-		ArrayList<Reservation> res = initReservs();
-		ArrayList<Reservation> resPhone = new ArrayList<Reservation>();
-		for (Reservation r : res){
-			if(phone.equals(r.getCustomerPhone()) ){
-				resPhone.add(r);
-			}
-		}
-		return resPhone;
-	}
 	// Deletes a reservation by id
 	public static void delReserv(int id){
 		try{
@@ -540,7 +410,6 @@ public class Database {
 
 		return res;
 	}
-
 	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
 	public static ArrayList<Reservation> grabPeriod(CarType carType, GregorianCalendar monthStart, GregorianCalendar monthEnd) {
 		System.out.println("Pulling from Database...");

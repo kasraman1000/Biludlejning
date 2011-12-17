@@ -16,6 +16,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+/**
+ * The central class that instantiates and handles all graphical components, and also serves as a "controller", listening for all actions
+ * 
+ * 
+ */
 
 public class GUI implements ActionListener {
 	// List of all cars
