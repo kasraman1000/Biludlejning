@@ -85,8 +85,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 					end.add(Calendar.DATE, 1);
 
 					while (date.before(end)) {
-						System.out.println("Adding reservation " + r.getId() + " to coords: " + c + ",\t" + (date.get(Calendar.DATE)-1));
-						guiArray[c][date.get(Calendar.DATE) - 1] = r;
+						if (date.get(Calendar.MONTH) == selectedMonth.get(Calendar.MONTH)) {
+							System.out.println("Adding reservation " + r + " to coords: " + c + ",\t" + (date.get(Calendar.DATE)-1));
+							guiArray[c][date.get(Calendar.DATE) - 1] = r;
+						}
 						date.add(Calendar.DATE, 1);
 						
 					}
@@ -165,6 +167,21 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			for (Car c : cars) {
 				if (c.getType() == selectedCarType) {
 					if (c.getId() == r.getCarId()) {
+						
+						GregorianCalendar start = (GregorianCalendar) r.getStartingDate().clone();
+						
+						while (start.get(Calendar.MONTH) != selectedMonth.get(Calendar.MONTH)) {
+							System.out.println(start.get(Calendar.MONTH) + "-" + start.get(Calendar.DAY_OF_MONTH) + " is out of bounds, raising...");
+							start.add(Calendar.DAY_OF_MONTH, 1);
+						}
+						
+						GregorianCalendar end = (GregorianCalendar) r.getEndDate().clone();
+						
+						while (end.get(Calendar.MONTH) != selectedMonth.get(Calendar.MONTH)) {
+							System.out.println(end.get(Calendar.MONTH) + "-" + end.get(Calendar.DAY_OF_MONTH) + " is out of bounds, lowering...");
+							end.add(Calendar.DAY_OF_MONTH, -1);
+						}
+						
 						if (r == selectedReservation) {
 							g.setColor(Color.ORANGE);
 						}
@@ -173,15 +190,15 @@ public class GuiCalendar extends JComponent implements MouseListener {
 						}
 
 						g.fillRect(
-								carNameWidth + (r.getStartingDate().get(Calendar.DATE) - 1) * cellWidth, 
+								carNameWidth + (start.get(Calendar.DATE) - 1) * cellWidth, 
 								carNumber * cellHeight, 
-								(1 + r.getEndDate().get(Calendar.DATE) - r.getStartingDate().get(Calendar.DATE)) * cellWidth, 
+								(end.get(Calendar.DATE) - start.get(Calendar.DATE) + 1) * cellWidth, 
 								cellHeight);
 						g.setColor(Color.BLACK);
 						g.drawRect(
-								carNameWidth + (r.getStartingDate().get(Calendar.DATE) - 1) * cellWidth, 
+								carNameWidth + (start.get(Calendar.DATE) - 1) * cellWidth, 
 								carNumber * cellHeight, 
-								(1 + r.getEndDate().get(Calendar.DATE) - r.getStartingDate().get(Calendar.DATE)) * cellWidth, 
+								(end.get(Calendar.DATE) - start.get(Calendar.DATE) + 1) * cellWidth, 
 								cellHeight);
 					}
 					carNumber++;

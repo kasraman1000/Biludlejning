@@ -73,20 +73,20 @@ public class Database {
 	}
 	// Returns id of the car in the reservation table
 	public static int getcarID(int id) {
-			try {
-				Statement select = conn.createStatement();		
-				String getIt = "SELECT * FROM Reservation WHERE id="+id;
-				ResultSet result = select.executeQuery(getIt);
-				result.next();
-				carID = result.getInt(2);		
-				System.out.println("carID = "+ carID);
-			}							
-			catch (Exception e) {			
-				e.printStackTrace();
-			}
-			return carID;			
+		try {
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Reservation WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			carID = result.getInt(2);		
+			System.out.println("carID = "+ carID);
+		}							
+		catch (Exception e) {			
+			e.printStackTrace();
 		}
-	
+		return carID;			
+	}
+
 	// Returns the name of the car in the Cars table
 	public static String getCarName(int id) {
 		try {
@@ -104,20 +104,20 @@ public class Database {
 	}			
 	// Returns the type of car in the Cars table (as an int)
 	public static int getType(int id) {
-			try {
-				Statement select = conn.createStatement();		
-				String getIt = "SELECT * FROM Car WHERE id="+id;
-				ResultSet result = select.executeQuery(getIt);
-				result.next();
-				int type = result.getInt(2);
-				System.out.println("Car:");
-				System.out.println("Type = "+ type);
-			}							
-			catch (Exception e) {			
-				e.printStackTrace();
-			}
-			return type;			
-		}	
+		try {
+			Statement select = conn.createStatement();		
+			String getIt = "SELECT * FROM Car WHERE id="+id;
+			ResultSet result = select.executeQuery(getIt);
+			result.next();
+			int type = result.getInt(2);
+			System.out.println("Car:");
+			System.out.println("Type = "+ type);
+		}							
+		catch (Exception e) {			
+			e.printStackTrace();
+		}
+		return type;			
+	}	
 	// Returns an ArrayList of all the Car objects in the database
 	public static ArrayList<Car> initCars(){
 		ArrayList<Car> cars = new ArrayList<Car>();
@@ -156,15 +156,15 @@ public class Database {
 	// Function that takes all the relevant information to create a new Reservation entry in the database.
 	public static void newReservervation(Reservation r) {
 		try {
-			
+
 			int cId = r.getCarId();
 			String phone = r.getCustomerPhone();
 			String name = r.getCustomerName();
 			GregorianCalendar start = r.getStartingDate();
 			GregorianCalendar end = r.getEndDate();
-			
-			
-			
+
+
+
 			java.sql.Date startD = new Date(start.getTimeInMillis());
 			System.out.println(startD);
 			Date endD = new Date(end.getTimeInMillis());
@@ -185,7 +185,7 @@ public class Database {
 			String name = r.getCustomerName();
 			GregorianCalendar start = r.getStartingDate();
 			GregorianCalendar end = r.getEndDate();
-			
+
 			java.sql.Date startD = new Date(start.getTimeInMillis());
 			System.out.println(startD);
 			Date endD = new Date(end.getTimeInMillis());
@@ -195,7 +195,7 @@ public class Database {
 		}							
 		catch (Exception e) {			
 			e.printStackTrace();
-			}
+		}
 	}
 	// Returns the phone number of the costumer, in the reservation table
 	public static String getPhone(int id) {
@@ -316,7 +316,7 @@ public class Database {
 			while (result.next()) {
 				cal = new GregorianCalendar();
 				cal1 = new GregorianCalendar();
-				
+
 				int id = result.getInt(1);
 				int carID = result.getInt(2);
 				String phone = result.getString(3);
@@ -327,7 +327,7 @@ public class Database {
 				String endDate = result.getString(6);
 				date1 = Date.valueOf(endDate);
 				cal1.setTime(date1);
-				
+
 
 				res.add(new Reservation(id, carID, cal, cal1, phone, name));
 			}	
@@ -339,14 +339,14 @@ public class Database {
 
 		return res;
 	}
-	
+
 	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
 	public static ArrayList<Reservation> grabPeriod(CarType carType, GregorianCalendar monthStart, GregorianCalendar monthEnd) {
 		System.out.println("Pulling from Database...");
 		ArrayList<Car> cars = initCars();
 		ArrayList<Reservation> res = initReservs();
 		ArrayList<Reservation> outputRes = new ArrayList<Reservation>();
-		
+
 		// Gets all the car ids from the reservations
 		CarType cType = null;
 		for (Reservation r : res){
@@ -360,16 +360,47 @@ public class Database {
 			}
 
 			// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
-			if (cType == carType && r.getEndDate().after(monthStart) == true && r.getStartingDate().before(monthEnd) == true){
-				outputRes.add(r);
-			}
+			boolean startCheck = true;
+			boolean endCheck = true;
+			boolean isInMonth = false;
+			if (cType == carType){
+				////////////////
 
+				//STARTCHECK
+				if ((monthStart).after(r.getEndDate()) == true ){
+					startCheck = true;
+				}
+				else {
+					startCheck = false;
+				}
+				//ENDCHECK
+				if ((monthEnd).before(r.getStartingDate()) == true){
+					endCheck = true;
+				}
+				else {
+					endCheck = false;
+				}
+				if (startCheck == true && endCheck == false || startCheck == false && endCheck == true){
+					//Reservation is valid, and does not interfere with other reservations.
+					isInMonth = false;
+				}
+				else if (startCheck == true && endCheck == true || startCheck == false && endCheck == false){
+					//First case: Both are true, (r) starts before (re), and ends before 
+					//Second Case: Reservation is "inside" of another, meaning it starts after another and ends before the other one does.
+					isInMonth = true;
+				}
+			}
+			if (isInMonth == true){				
+				outputRes.add(r);
+				System.out.println("we just added " + r + " to the array of reservations being shown");
+			}
 		}
 
 		System.out.println("Total size of outputRes: " + outputRes.size());
 		return outputRes;
 
 	}
+
 	// This method closes the database
 	public void closeDb() {
 		try {
