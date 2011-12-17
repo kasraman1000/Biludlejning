@@ -1,3 +1,13 @@
+stray thought: 
+Wouldn't it be nice if methods the database-class actually took a single Reservation object as an argument, instead of 5-6 arguments?
+I think we kinda missed a Object-orinted thingy-point here :(
+
+
+
+-----
+
+
+
 Kasra:
 Allright, vi bliver nødt til at komme i gang med skidtet, så jeg tror jeg begynder at skrive mine umiddelbare tanker ned her
 

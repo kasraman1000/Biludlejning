@@ -312,11 +312,9 @@ public class Database {
 				date1 = Date.valueOf(endDate);
 				cal1.setTime(date1);
 				
-				System.out.println(cal1.get(Calendar.DAY_OF_MONTH));
 
 				res.add(new Reservation(id, carID, cal, cal1, phone, name));
 			}	
-			System.out.println(res);	
 		}
 
 		catch (Exception e) {

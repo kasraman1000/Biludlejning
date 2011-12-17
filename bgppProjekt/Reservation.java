@@ -1,5 +1,6 @@
 package bgppProjekt;
 
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
 
 /**
@@ -113,6 +114,20 @@ public class Reservation {
 			this.customerName = customerName;
 		}
 		
+		public String toString() {
+			String s = new String();
+			SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yy");
+			
+			String start = sdf.format(startingDate.getTime());
+			String end = sdf.format(endDate.getTime());
+			
+			s += "Name: '" + customerName + "' ";
+			s += "Phone: '" + customerPhone + "' ";
+			s += "Reservation: " + start + " to ";
+			s += end;
+			
+			return s;
+		}
 		
 		
 

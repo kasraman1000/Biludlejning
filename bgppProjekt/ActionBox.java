@@ -9,11 +9,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 
 public class ActionBox extends JPanel {
 
@@ -23,7 +26,7 @@ public class ActionBox extends JPanel {
 	CardLayout cards;
 	// The two states the Panel can be in
 	InspectBox inspectBox;
-	JPanel searchBox;
+	SearchBox searchBox;
 	NewReservationBox newReservationBox;
 	JPanel blankBox;
 
@@ -37,7 +40,7 @@ public class ActionBox extends JPanel {
 		cards = new CardLayout();
 		setLayout(cards);
 
-		searchBox = new JPanel();
+		searchBox = new SearchBox();
 		inspectBox = new InspectBox();
 		newReservationBox = new NewReservationBox();
 		blankBox = new JPanel();
@@ -206,20 +209,20 @@ public class ActionBox extends JPanel {
 									(int) startYear.getSelectedItem(), 
 									(int) startMonth.getSelectedItem() - 1, 
 									(int) startDate.getSelectedItem()), 
-							new GregorianCalendar(
-									(int) endYear.getSelectedItem(),  
-									(int) endMonth.getSelectedItem() - 1, 
-									(int) endDate.getSelectedItem()));
-					
+									new GregorianCalendar(
+											(int) endYear.getSelectedItem(),  
+											(int) endMonth.getSelectedItem() - 1, 
+											(int) endDate.getSelectedItem()));
+
 				}
 			});
-			
+
 			JButton deleteButton = new JButton("Delete Reservation");
 			deleteButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					Database.delReserv(selectedReservation.getId());
 					selectedReservation = null;
-					
+
 					cards.show(getParent(), "BLANK");
 				}
 			});
@@ -299,7 +302,7 @@ public class ActionBox extends JPanel {
 			carPanel = new JPanel();
 			carTypeList = new JComboBox<CarType>(CarType.values());
 			carTypeList.addActionListener(new ActionListener() {
-				
+
 				public void actionPerformed(ActionEvent e) {
 					// Clear the carList and populate it again
 					System.out.println(e.getActionCommand());
@@ -310,14 +313,14 @@ public class ActionBox extends JPanel {
 						}
 					}
 					validate();
-					
+
 				}
 			});			
 			carList = new JComboBox<Car>();
-			
+
 			carPanel.add(carTypeList);
 			carPanel.add(carList);
-			
+
 			dataPanel.add(carPanel);
 
 			// dropdowns for starting date
@@ -385,16 +388,16 @@ public class ActionBox extends JPanel {
 									(int) startYear.getSelectedItem(), 
 									(int) startMonth.getSelectedItem() - 1, 
 									(int) startDate.getSelectedItem()), 
-							new GregorianCalendar(
-									(int) endYear.getSelectedItem(),  
-									(int) endMonth.getSelectedItem() - 1, 
-									(int) endDate.getSelectedItem()));
-					
+									new GregorianCalendar(
+											(int) endYear.getSelectedItem(),  
+											(int) endMonth.getSelectedItem() - 1, 
+											(int) endDate.getSelectedItem()));
+
 					cards.show(getParent(), "BLANK");
-					
+
 				}
 			});
-			
+
 			JButton cancelButton = new JButton("Cancel");
 			cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
@@ -417,7 +420,7 @@ public class ActionBox extends JPanel {
 
 			nameField.setText("");
 			phoneField.setText("");
-			
+
 			carTypeList.setSelectedIndex(0);
 
 			Calendar cal = Calendar.getInstance();
@@ -433,4 +436,64 @@ public class ActionBox extends JPanel {
 
 	}
 
+	private class SearchBox extends JPanel
+	{
+		JList<Reservation> list;
+		DefaultListModel<Reservation> listModel;
+		JPanel searchPanel;
+		
+		JTextField searchField;
+		JButton searchButton;
+		
+		public SearchBox() 
+		{
+			makeFrame();
+		}
+
+		private void makeFrame() 
+		{
+			listModel = new DefaultListModel<Reservation>();
+			list = new JList<Reservation>(listModel);
+			list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+			
+			searchPanel = new JPanel();
+			
+			searchField = new JTextField(20);
+			searchButton = new JButton("Search");
+						
+			setLayout(new BorderLayout());
+			
+			add(list, BorderLayout.CENTER);
+			add(searchPanel, BorderLayout.SOUTH);
+			
+			searchPanel.add(searchField);
+			searchPanel.add(searchButton);
+			searchButton.addActionListener(new ActionListener() {
+				
+				public void actionPerformed(ActionEvent arg0) {
+					// Searching through all reservations for input
+					String s = searchField.getText();
+					s.toLowerCase();
+					ArrayList<Reservation> reservations = Database.initReservs();
+					
+					listModel.clear();
+					
+					for (Reservation r : reservations) {
+						if (r.getCustomerName().toLowerCase().contains(s)) {
+							System.out.println(s + " was found in customer name: " + r.getCustomerName());
+							listModel.addElement(r);
+						}
+						else if (r.getCustomerPhone().toLowerCase().contains(s)) {
+							System.out.println(s + " was found in customer phone: " + r.getCustomerPhone());
+							listModel.addElement(r);
+						}
+					}
+				}
+			});
+
+		}
+	}
+
 }
+
+
