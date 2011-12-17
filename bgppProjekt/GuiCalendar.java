@@ -364,7 +364,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @return Height of the calendar
 	 */
 	private int calcHeight() {
-		return (calcCars() + 1) * cellHeight;
+		return (calcCars() + 1) * cellHeight + 1;
 	}
 	
 	private int calcCars() {

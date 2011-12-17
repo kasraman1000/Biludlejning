@@ -69,6 +69,8 @@ public class GUI implements ActionListener {
 		// Grabbing content pane
 		frame = new JFrame("Biludlejning");
 		contentPane = frame.getContentPane();
+		frame.setResizable(false);
+		
 		contentPane.setLayout(new BorderLayout());
 
 		// Adding the Calendar
@@ -170,9 +172,8 @@ public class GUI implements ActionListener {
 		actionBox.add(newReservationBox, "NEW");
 		actionBox.add(blankBox, "BLANK");
 
-
-
-
+		actionCards.show(actionBox, "BLANK");
+		
 		frame.pack();
 		frame.setVisible(true);
 		System.out.println("Going visible!");
