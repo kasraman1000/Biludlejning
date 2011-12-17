@@ -156,21 +156,119 @@ public class Database {
 	// Function that takes all the relevant information to create a new Reservation entry in the database.
 	public static void newReservervation(Reservation r) {
 		try {
+			ArrayList<Car> cars = initCars();
+			CarType cType = null;
+			int carID = r.getCarId();	
+			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
+			for (Car c : cars){
+				if (c.getId() == carID) {
+					cType = c.getType();
+				}
+			}
 
+			ArrayList<Reservation> res = grabPeriod(cType, r.getStartingDate(), r.getEndDate());
 			int cId = r.getCarId();
 			String phone = r.getCustomerPhone();
 			String name = r.getCustomerName();
 			GregorianCalendar start = r.getStartingDate();
 			GregorianCalendar end = r.getEndDate();
+			ArrayList<Reservation> reservArray = initReservs();
+			//Set of booleans used to check if the new reservation doesnt overlap existing reservations.
+			boolean check1=true;
+			boolean check2=false;
+			boolean check3=false;
+			boolean check4=false;
+			boolean check5=false;
+			boolean check6=false;
+			boolean wasOccupied=true;
 
+			for (Reservation reserv : reservArray)
+			{
+				System.out.println("reservations id er nu" + reserv.getId());
+				System.out.println("reservs car id: " + reserv.getCarId() + " r's car id: " + r.getCarId() );
+				if (reserv.getCarId()==r.getCarId()){
+					//CASE 1:
+					if (r.getEndDate().before(reserv.getStartingDate()) == true && r.getStartingDate().before(reserv.getStartingDate())){
+						check1=true;
+						System.out.println("check1 true");
+					}
+					else{
+						check1=false;
+						System.out.println("check1 false");
+					}
+					//CASE2:
 
+					if (r.getStartingDate().after(reserv.getEndDate()) == true && r.getEndDate().after(reserv.getEndDate())){
+						check2=true;
+						System.out.println("check2 true");
+					}
+					else{
+						check2=false;
+						System.out.println("check2 false");
+					}
+					//CASE3:
 
-			java.sql.Date startD = new Date(start.getTimeInMillis());
-			System.out.println(startD);
-			Date endD = new Date(end.getTimeInMillis());
-			System.out.println(endD);
-			Statement select = conn.createStatement();	
-			select.executeUpdate("INSERT INTO `Reservation` (`carID`, `phone`, `name`, `start`, `end`) VALUES ('" + cId + "', '" + phone + "', '" +  name + "', '" + startD + "', '" + endD + "');");
+					if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate())){
+						check3=true;
+						System.out.println("check3 true");
+						break;
+					}
+					else{
+						check3=false;
+						System.out.println("check3 false");
+					}
+					//CASE4:
+					if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate()) && r.getEndDate().after(reserv.getStartingDate())){
+						check4=true;
+						System.out.println("check4 true");
+						break;
+					}
+					else{
+						check4=false;
+						System.out.println("check4 false");
+					}
+					//CASE5:
+					if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate()) && r.getStartingDate().before(reserv.getEndDate())){
+						check5=true;
+						System.out.println("check5 true");
+						break;
+					}
+					else{
+						check5=false;
+						System.out.println("check5 false");
+					}
+					//CASE6:
+
+					if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate())){
+						check6=true;
+						System.out.println("check6 true");
+						break;
+					}
+					else{
+						check6=false;
+						System.out.println("check6 false");
+					}				
+				}
+
+			}
+			if (check3==true || check4 == true || check5 == true || check6==true)
+			{
+				System.out.println("denied, inteferred with existing reservations");
+				wasOccupied = true;
+			}
+			else if (check1 == true || check2 == true){
+				System.out.println("dates were fine, creating new reservation");	
+				wasOccupied = false;
+			}
+			//If legal dates, telling the database to create the entry in the reservation table.
+			if (wasOccupied ==false){
+				java.sql.Date startD = new Date(start.getTimeInMillis());
+				System.out.println(startD);
+				Date endD = new Date(end.getTimeInMillis());
+				System.out.println(endD);
+				Statement select = conn.createStatement();	
+				select.executeUpdate("INSERT INTO `Reservation` (`carID`, `phone`, `name`, `start`, `end`) VALUES ('" + cId + "', '" + phone + "', '" +  name + "', '" + startD + "', '" + endD + "');");
+			}
 		}							
 		catch (Exception e) {			
 			e.printStackTrace();
@@ -185,14 +283,109 @@ public class Database {
 			String name = r.getCustomerName();
 			GregorianCalendar start = r.getStartingDate();
 			GregorianCalendar end = r.getEndDate();
+			ArrayList<Reservation> reservArray = initReservs();
+			//Set of booleans used to check if the reservations new dates doesnt overlap existing reservations.
+			boolean check1=false;
+			boolean check2=false;
+			boolean check3=false;
+			boolean check4=false;
+			boolean check5=false;
+			boolean check6=false;
+			boolean wasOccupied=true;
 
-			java.sql.Date startD = new Date(start.getTimeInMillis());
-			System.out.println(startD);
-			Date endD = new Date(end.getTimeInMillis());
-			System.out.println(endD);
-			Statement select = conn.createStatement();	
-			select.executeUpdate("UPDATE `Reservation` SET `carID`='" + cId + "', `phone`='" + phone + "', `name`='" +  name + "', `start`='" + startD + "', `end`='" + endD + "' WHERE `id`='" + id + "';");
-		}							
+			for (Reservation reserv : reservArray)
+			{
+				System.out.println("reservations id er nu" + reserv.getId());
+				if (r.getId() != reserv.getId()){
+					if (reserv.getCarId()==r.getCarId()){
+						//CASE1:
+						if (r.getEndDate().before(reserv.getStartingDate()) == true && r.getStartingDate().before(reserv.getStartingDate())){
+							check1=true;
+							System.out.println("check1 true");
+						}
+						else{
+							check1=false;
+							System.out.println("check1 false");
+						}
+						
+						//CASE2:
+						if (r.getStartingDate().after(reserv.getEndDate()) == true && r.getEndDate().after(reserv.getEndDate())){
+							check2=true;
+							System.out.println("check2 true");
+						}
+						else{
+							check2=false;
+							System.out.println("check2 false");
+						}
+						
+						//CASE3:
+						if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate())){
+							check3=true;
+							System.out.println("check3 true");
+							break;
+						}
+						else{
+							check3=false;
+							System.out.println("check3 false");
+						}
+						
+						//CASE4:
+						if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate()) && r.getEndDate().after(reserv.getStartingDate())){
+							check4=true;
+							System.out.println("check4 true");
+							break;
+						}
+						else{
+							check4=false;
+							System.out.println("check4 false");
+						}
+						
+						//CASE5:
+						if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate()) && r.getStartingDate().before(reserv.getEndDate())){
+							check5=true;
+							System.out.println("check5 true");
+							break;
+						}
+						else{
+							check5=false;
+							System.out.println("check5 false");
+						}
+						
+						//CASE6:
+						if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate())){
+							check6=true;
+							System.out.println("check6 true");
+							break;
+						}
+						else{
+							check6=false;
+							System.out.println("check6 false");
+						}				
+					}
+
+				}
+				//The cases declaring problems with existing reservations.
+				//TODO method calling error message box.
+				if (check3==true || check4 == true || check5 == true || check6==true)
+				{
+					System.out.println("denied, inteferred with existing reservations");
+					wasOccupied = true;
+				}
+				else if (check1 == true || check2 == true){
+					System.out.println("dates were fine, creating new reservation");	
+					wasOccupied = false;
+				}
+				//If legal dates, telling the database to update the entry in the reservation table.
+				if (wasOccupied ==false){
+					java.sql.Date startD = new Date(start.getTimeInMillis());
+					System.out.println(startD);
+					Date endD = new Date(end.getTimeInMillis());
+					System.out.println(endD);
+					Statement select = conn.createStatement();	
+					select.executeUpdate("UPDATE `Reservation` SET `carID`='" + cId + "', `phone`='" + phone + "', `name`='" +  name + "', `start`='" + startD + "', `end`='" + endD + "' WHERE `id`='" + id + "';");
+				}
+			}	
+		}
 		catch (Exception e) {			
 			e.printStackTrace();
 		}
@@ -392,7 +585,6 @@ public class Database {
 			}
 			if (isInMonth == true){				
 				outputRes.add(r);
-				System.out.println("we just added " + r + " to the array of reservations being shown");
 			}
 		}
 
