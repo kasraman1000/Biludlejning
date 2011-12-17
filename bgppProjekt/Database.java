@@ -341,26 +341,11 @@ public class Database {
 	}
 	
 	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
-	public static ArrayList<Reservation> grabMonth(CarType carType, GregorianCalendar month) {
+	public static ArrayList<Reservation> grabPeriod(CarType carType, GregorianCalendar monthStart, GregorianCalendar monthEnd) {
 		System.out.println("Pulling from Database...");
 		ArrayList<Car> cars = initCars();
 		ArrayList<Reservation> res = initReservs();
 		ArrayList<Reservation> outputRes = new ArrayList<Reservation>();
-		
-		// Figure out start and end of month
-		GregorianCalendar monthStart = new GregorianCalendar(
-				month.get(Calendar.YEAR), 
-				month.get(Calendar.MONTH), 
-				month.getActualMinimum(Calendar.DAY_OF_MONTH));
-		monthStart.add(Calendar.DAY_OF_MONTH, -1);
-		
-		System.out.println(month.get(Calendar.MONTH));
-		
-		GregorianCalendar monthEnd = new GregorianCalendar(
-				month.get(Calendar.YEAR), 
-				month.get(Calendar.MONTH), 
-				month.getActualMaximum(Calendar.DAY_OF_MONTH));
-		monthStart.add(Calendar.DAY_OF_MONTH, 1);
 		
 		// Gets all the car ids from the reservations
 		CarType cType = null;

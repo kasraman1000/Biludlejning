@@ -110,7 +110,22 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * Filling out the reservations array
 	 */
 	private void fillReservations() {
-		reservations = Database.grabMonth(selectedCarType, selectedMonth);
+		// Figure out start and end of month
+		GregorianCalendar monthStart = new GregorianCalendar(
+				selectedMonth.get(Calendar.YEAR), 
+				selectedMonth.get(Calendar.MONTH), 
+				selectedMonth.getActualMinimum(Calendar.DAY_OF_MONTH));
+		monthStart.add(Calendar.DAY_OF_MONTH, -1);
+
+		System.out.println(selectedMonth.get(Calendar.MONTH));
+
+		GregorianCalendar monthEnd = new GregorianCalendar(
+				selectedMonth.get(Calendar.YEAR), 
+				selectedMonth.get(Calendar.MONTH), 
+				selectedMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
+		monthStart.add(Calendar.DAY_OF_MONTH, 1);
+		
+		reservations = Database.grabPeriod(selectedCarType, monthStart, monthEnd);
 	}
 
 
