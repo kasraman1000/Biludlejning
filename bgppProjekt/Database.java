@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-
 import com.mysql.jdbc.Connection;
 
 /**
@@ -230,9 +229,7 @@ public class Database {
 			//If legal dates, telling the database to create the entry in the reservation table.
 			if (wasOccupied ==false){
 				java.sql.Date startD = new Date(start.getTimeInMillis());
-				System.out.println(startD);
 				Date endD = new Date(end.getTimeInMillis());
-				System.out.println(endD);
 				Statement select = conn.createStatement();	
 				select.executeUpdate("INSERT INTO `Reservation` (`carID`, `phone`, `name`, `start`, `end`) VALUES ('" + cId + "', '" + phone + "', '" +  name + "', '" + startD + "', '" + endD + "');");				
 			}

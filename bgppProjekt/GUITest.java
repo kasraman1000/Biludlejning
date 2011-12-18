@@ -13,7 +13,6 @@ public class GUITest {
 	}
 	
 	private void makeFrame() {
-		System.out.println("Making a new JFrame");
 		
 		JFrame testFrame = new JFrame("Testing out GUICalendar...");
 		Container contentPane = testFrame.getContentPane();
