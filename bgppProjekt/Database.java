@@ -125,8 +125,6 @@ public class Database {
 					cType = c.getType();
 				}
 			}
-
-			ArrayList<Reservation> res = grabPeriod(cType, r.getStartingDate(), r.getEndDate());
 			int cId = r.getCarId();
 			String phone = r.getCustomerPhone();
 			String name = r.getCustomerName();
@@ -428,13 +426,11 @@ public class Database {
 					cType = c.getType();
 				}
 			}
-
-			// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
 			boolean startCheck = true;
 			boolean endCheck = true;
 			boolean isInMonth = false;
+			// We check if the carType matches the carType of the reservation and it ends after the months starts and starts before the month ends.
 			if (cType == carType){
-				////////////////
 
 				//STARTCHECK
 				if ((monthStart).after(r.getEndDate()) == true ){

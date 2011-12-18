@@ -188,9 +188,12 @@ public class GUI implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Recieved action: " + e.getActionCommand());
 	}
-
+	public static void kewinTest(){
+		System.out.println("Kewin test funktion");
+	}
+	
 	// Eventlisteners //
-
+	
 	// Invoked when the car type dropdown has been used
 	private class CarTypeListListener implements ActionListener
 	{
@@ -227,6 +230,16 @@ public class GUI implements ActionListener {
 			}
 		}
 	}
+	
+	// Invoked when the user double-clicks a reservation, same as clicking "Edit selected Reservation".
+		public void editReservationByDoubleClick()
+		{
+			if (guiCalendar.getSelectedReservation() != null) {
+				selectedReservation = guiCalendar.getSelectedReservation();
+				inspectBox.showReservation(selectedReservation);
+				actionCards.show(actionBox,"INSPECT");
+			}
+		}
 
 	// Invoked when the "New Reservation"-button has been pressed
 	private class NewReservationButtonListener implements ActionListener

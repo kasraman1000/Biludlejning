@@ -40,7 +40,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		addMouseListener(this);
 
 		gui = g;
-
+		gui.kewinTest();
 		selectedCarType = CarType.SEDAN;
 		selectedMonth = new GregorianCalendar(2011, 11, 1);
 
@@ -238,6 +238,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 					if (doubleClick())
 					{
 						System.out.println("It was a doubleclick");
+						gui.editReservationByDoubleClick();
 						//CODE/FUNCTIONS TO BE CALLED WHEN DOUBLECLICK
 						gui.doubleClicked();
 					}
