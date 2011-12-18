@@ -9,10 +9,9 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 
 /**
  * One of the ActionBox Panels, this one handles creating the interface for searching through all reservations.
@@ -21,6 +20,7 @@ import javax.swing.event.ListSelectionListener;
 public class SearchBox extends JPanel
 {
 	private JList<Reservation> list;
+	private JScrollPane scrollPane;
 	private DefaultListModel<Reservation> listModel;
 	private JPanel searchPanel;
 	
@@ -33,6 +33,8 @@ public class SearchBox extends JPanel
 		list = new JList<Reservation>(listModel);
 		list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		
+		scrollPane = new JScrollPane(list);
+		
 		searchPanel = new JPanel();
 		
 		searchField = new JTextField(20);
@@ -40,7 +42,7 @@ public class SearchBox extends JPanel
 					
 		setLayout(new BorderLayout());
 		
-		add(list, BorderLayout.CENTER);
+		add(scrollPane, BorderLayout.CENTER);
 		add(searchPanel, BorderLayout.SOUTH);
 		
 		searchPanel.add(searchField);
