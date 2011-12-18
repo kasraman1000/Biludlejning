@@ -467,7 +467,7 @@ public class Database {
 	}
 
 	// This method closes the database
-	public void closeDb() {
+	public static void closeDb() {
 		try {
 			conn.close();
 		} catch(Exception e) {}

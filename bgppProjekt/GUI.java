@@ -7,6 +7,8 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.swing.JButton;
@@ -70,6 +72,7 @@ public class GUI implements ActionListener {
 		frame = new JFrame("Biludlejning");
 		contentPane = frame.getContentPane();
 		frame.setResizable(false);
+		frame.addWindowListener(new CloseWindowListener());
 		
 		contentPane.setLayout(new BorderLayout());
 
@@ -344,6 +347,29 @@ public class GUI implements ActionListener {
 
 			actionCards.show(actionBox, "BLANK");
 		}
+	}
+	
+	// Invoked many times when window-related events occur,
+	// but only used for when the window is closed.
+	private class CloseWindowListener implements WindowListener 
+	{
+
+		public void windowActivated(WindowEvent e) {
+		}
+		public void windowClosed(WindowEvent e) {
+		}
+		public void windowClosing(WindowEvent e) {
+			Database.closeDb();
+		}
+		public void windowDeactivated(WindowEvent e) {
+		}
+		public void windowDeiconified(WindowEvent e) {
+		}
+		public void windowIconified(WindowEvent e) {
+		}
+		public void windowOpened(WindowEvent e) {
+		}
+		
 	}
 
 
