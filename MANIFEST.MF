@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+
+Main-Class: bggpProjekt.Main
+lib/C:\Program Files (x86)\MySQL\MySQL Connector J

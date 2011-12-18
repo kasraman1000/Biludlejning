@@ -243,7 +243,6 @@ public class GUI implements ActionListener {
 	private class NewReservationButtonListener implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Making a new reservation");
 			newReservationBox.newReservation();
 			actionCards.show(actionBox, "NEW");
 		}
