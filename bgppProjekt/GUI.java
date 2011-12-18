@@ -72,6 +72,7 @@ public class GUI implements ActionListener {
 		frame = new JFrame("Biludlejning");
 		contentPane = frame.getContentPane();
 		frame.setResizable(false);
+		frame.setLocation(300, 400);
 		frame.addWindowListener(new CloseWindowListener());
 		
 		contentPane.setLayout(new BorderLayout());
