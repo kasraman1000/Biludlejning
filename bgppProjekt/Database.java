@@ -1,13 +1,13 @@
 package bgppProjekt;
 import java.sql.Date;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import com.mysql.jdbc.Connection;
-import java.sql.Statement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.GregorianCalendar;
+
+import com.mysql.jdbc.Connection;
 
 /**
  * Class containing all functions handled between our program and the database.
@@ -32,7 +32,11 @@ public class Database {
 	private static String driver = "com.mysql.jdbc.Driver";		
 	private static String dbName = "BiludlejningCrelde";
 	private static String username = "Crelde", password = "bil";
-	// Connects to the database
+	/**
+	 * Function that creates a connection to the database
+	 * 
+	 * @return Returns true if we are connected to the database, false if not.
+	 */
 	public static Boolean connect() {
 		boolean isConnected = false;
 		// Here we connect to the database
@@ -41,19 +45,17 @@ public class Database {
 			conn = (Connection) DriverManager.getConnection("jdbc:mysql://" +
 					"mysql.itu.dk/" + dbName, username, password);
 			isConnected = true;
-			if (isConnected = true){
-				System.out.println("Winner winner chicken dinner");
-			}
-
 		} catch (Exception e) {
-			System.out.println("Fail to connect db");
 		}			
 		return isConnected;
 	}
-	// Creates two tables in the database
+	/**
+	 * Creates two tables in the database, and fills in all the cars, only called one single time.
+	 */
 	public static void initiateDb() {
 		try {
 			Statement initiate = conn.createStatement();
+			//Creates the Car Table
 			initiate.executeUpdate(
 					"CREATE TABLE Car"+
 							"(id int(11) NOT NULL auto_increment," +
@@ -61,6 +63,7 @@ public class Database {
 							"`name` text NOT NULL,"+
 							"PRIMARY KEY (id))"+
 					"ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=latin1;");
+			//Creates the Reservation Table
 			initiate.executeUpdate(
 					"CREATE TABLE Reservation"+
 							"(id int(11) NOT NULL auto_increment,"+
@@ -71,17 +74,41 @@ public class Database {
 							"`end` date NOT NULL,"+
 							"PRIMARY KEY (id))"+
 					"ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;");
+			//Inserts all our cars into the Car Table.
+			initiate.executeUpdate("INSERT INTO Car VALUES (1, 'Sedan1');" +
+					"INSERT INTO Car VALUES (1, 'Sedan2');"+
+					"INSERT INTO Car VALUES (1, 'Sedan3');"+
+					"INSERT INTO Car VALUES (1, 'Sedan4');"+
+					"INSERT INTO Car VALUES (1, 'Sedan5');"+
+					"INSERT INTO Car VALUES (2, 'Van1');"+
+					"INSERT INTO Car VALUES (2, 'Van2');"+
+					"INSERT INTO Car VALUES (2, 'Van3');"+
+					"INSERT INTO Car VALUES (2, 'Van4');"+
+					"INSERT INTO Car VALUES (2, 'Van5');"+
+					"INSERT INTO Car VALUES (3, 'Stationcar1');"+
+					"INSERT INTO Car VALUES (3, 'Stationcar2');"+
+					"INSERT INTO Car VALUES (3, 'Stationcar3');"+
+					"INSERT INTO Car VALUES (3, 'Stationcar4');"+
+					"INSERT INTO Car VALUES (3, 'Stationcar5');"+
+					"INSERT INTO Car VALUES (4, 'Sportscar1');"+
+					"INSERT INTO Car VALUES (4, 'Sportscar2');"+
+					"INSERT INTO Car VALUES (4, 'Sportscar3');"+
+					"INSERT INTO Car VALUES (4, 'Sportscar4');"+
+					"INSERT INTO Car VALUES (4, 'Sportscar5');");
 
 		}				catch (SQLException e){
 			e.printStackTrace();
 		}
-		System.out.println("gotta catch em all");
 	}
-	// Returns an ArrayList of all the Car objects in the database
+	/**
+	 * Function that is used to get an ArrayList of all the cars in our Database.
+	 * @return ArrayList of all the Car objects in the database
+	 */
 	public static ArrayList<Car> initCars(){
 		ArrayList<Car> cars = new ArrayList<Car>();
 		try {			
 			Statement select = conn.createStatement();		
+			// Choose ALL cars from Car Table
 			String getIt = "SELECT * FROM Car";
 			ResultSet result = select.executeQuery(getIt);
 			while (result.next()) {
@@ -89,7 +116,7 @@ public class Database {
 				int type = result.getInt(2);
 				String name = result.getString(3);
 				CarType cType = null;
-
+				//Converting the databases int-values of cartypes to actual CarTypes.
 				if (type == 1){
 					cType = CarType.SEDAN;
 				}
@@ -102,8 +129,8 @@ public class Database {
 				else if (type == 4){
 					cType = CarType.SPORTSCAR;
 				}	
+				//Finally adding each car to an ArrayList
 				cars.add(new Car(cType, name, carID));
-
 			}	
 		}		
 		catch (Exception e) {
@@ -112,26 +139,22 @@ public class Database {
 
 		return cars;
 	}
-	// Function that takes all the relevant information to create a new Reservation entry in the database.
+	/**
+	 * Function to create a new Reservation entry in the Reservation Database if it does not conflict with existing reservations.
+	 * 
+	 * @param r Reservation object to be created in the Database.
+	 * @return Returns Success = true if the Reservation didnt conflict with existing reservations.
+	 */
 	public static boolean newReservervation(Reservation r) {
 		boolean success = false;
-		try {
-			ArrayList<Car> cars = initCars();
-			CarType cType = null;
-			int carID = r.getCarId();	
-			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
-			for (Car c : cars){
-				if (c.getId() == carID) {
-					cType = c.getType();
-				}
-			}
+		try {			
 			int cId = r.getCarId();
 			String phone = r.getCustomerPhone();
 			String name = r.getCustomerName();
 			GregorianCalendar start = r.getStartingDate();
 			GregorianCalendar end = r.getEndDate();
 			ArrayList<Reservation> reservArray = initReservs();
-			//Set of booleans used to check if the new reservation doesnt overlap existing reservations.
+			//Set of booleans used to check if the new reservation doesn't overlap existing reservations.
 			boolean check1=true;
 			boolean check2=false;
 			boolean check3=false;
@@ -139,83 +162,70 @@ public class Database {
 			boolean check5=false;
 			boolean check6=false;
 			boolean wasOccupied=true;
-
+			// For loop to check all cases to see which case the reservation is compared to all existing reservations with the same CarId.
 			for (Reservation reserv : reservArray)
 			{
-				System.out.println("reservations id er nu" + reserv.getId());
-				System.out.println("reservs car id: " + reserv.getCarId() + " r's car id: " + r.getCarId() );
 				if (reserv.getCarId()==r.getCarId()){
 					//CASE 1:
 					if (r.getEndDate().before(reserv.getStartingDate()) == true && r.getStartingDate().before(reserv.getStartingDate())){
 						check1=true;
-						System.out.println("check1 true");
 					}
 					else{
 						check1=false;
-						System.out.println("check1 false");
 					}
 					//CASE2:
 
 					if (r.getStartingDate().after(reserv.getEndDate()) == true && r.getEndDate().after(reserv.getEndDate())){
 						check2=true;
-						System.out.println("check2 true");
 					}
 					else{
 						check2=false;
-						System.out.println("check2 false");
 					}
 					//CASE3:
 
 					if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate())){
 						check3=true;
-						System.out.println("check3 true");
 						break;
 					}
 					else{
 						check3=false;
-						System.out.println("check3 false");
 					}
 					//CASE4:
 					if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate()) && r.getEndDate().after(reserv.getStartingDate())){
 						check4=true;
-						System.out.println("check4 true");
 						break;
 					}
 					else{
 						check4=false;
-						System.out.println("check4 false");
 					}
 					//CASE5:
 					if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate()) && r.getStartingDate().before(reserv.getEndDate())){
 						check5=true;
-						System.out.println("check5 true");
 						break;
 					}
 					else{
 						check5=false;
-						System.out.println("check5 false");
 					}
 					//CASE6:
 
 					if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate())){
 						check6=true;
-						System.out.println("check6 true");
 						break;
 					}
 					else{
-						check6=false;
-						System.out.println("check6 false");
+						check6=false;;
 					}				
 				}
 
 			}
 			if (check3==true || check4 == true || check5 == true || check6==true)
 			{
-				System.out.println("denied, inteferred with existing reservations");
+				// One of the negative checks were true, which means the new reservation is conflicting with at least one other reservation,
+				// And will therefore not be allowed to be created.
 				wasOccupied = true;
 			}
 			else if (check1 == true || check2 == true){
-				System.out.println("dates were fine, creating new reservation");	
+				// If the negative checks were not true, one of the the positive will be true, and we will set occupied to false and sucess to true.	
 				wasOccupied = false;
 				success = true;
 			}
@@ -234,7 +244,12 @@ public class Database {
 		}
 		return success;			
 	}
-	// Edits a given reservation fields in the database.
+	/**
+	 * Function that edits a Reservation entry in the database if it does not conflict with existing reservations.
+	 * 
+	 * @param r Reservation object representing the values and id to be updated in the Reservation table in the database.
+	 * @return Returns Success = true if the Reservation didnt conflict with existing reservations.
+	 */
 	public static boolean editReservation(Reservation r) {
 		boolean success = false;
 		try {
@@ -253,98 +268,82 @@ public class Database {
 			boolean check5=false;
 			boolean check6=false;
 			boolean wasOccupied=true;
-
+			// For loop to check all cases to see which case the reservation is compared to all existing reservations with the same CarId.
 			for (Reservation reserv : reservArray)
 			{
-				System.out.println("reservations id er nu" + reserv.getId());
 				if (r.getId() != reserv.getId()){
 					if (reserv.getCarId()==r.getCarId()){
 						//CASE1:
 						if (r.getEndDate().before(reserv.getStartingDate()) == true && r.getStartingDate().before(reserv.getStartingDate())){
 							check1=true;
-							System.out.println("check1 true");
 						}
 						else{
 							check1=false;
-							System.out.println("check1 false");
 						}
 
 						//CASE2:
 						if (r.getStartingDate().after(reserv.getEndDate()) == true && r.getEndDate().after(reserv.getEndDate())){
 							check2=true;
-							System.out.println("check2 true");
 						}
 						else{
 							check2=false;
-							System.out.println("check2 false");
 						}
 
 						//CASE3:
 						if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate())){
 							check3=true;
-							System.out.println("check3 true");
 							break;
 						}
 						else{
 							check3=false;
-							System.out.println("check3 false");
 						}
 
 						//CASE4:
 						if (r.getStartingDate().before(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate()) && r.getEndDate().after(reserv.getStartingDate())){
 							check4=true;
-							System.out.println("check4 true");
 							break;
 						}
 						else{
 							check4=false;
-							System.out.println("check4 false");
 						}
 
 						//CASE5:
 						if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().after(reserv.getEndDate()) && r.getStartingDate().before(reserv.getEndDate())){
 							check5=true;
-							System.out.println("check5 true");
 							break;
 						}
 						else{
 							check5=false;
-							System.out.println("check5 false");
 						}
 
 						//CASE6:
 						if (r.getStartingDate().after(reserv.getStartingDate()) == true && r.getEndDate().before(reserv.getEndDate())){
 							check6=true;
-							System.out.println("check6 true");
 							break;
 						}
 						else{
 							check6=false;
-							System.out.println("check6 false");
 						}				
 					}
 
 				}
 			}	
-			//The cases declaring problems with existing reservations.
 			if (check3==true || check4 == true || check5 == true || check6==true)
 			{
-				System.out.println("denied, inteferred with existing reservations");
+				// One of the negative checks were true, which means the new reservation is conflicting with at least one other reservation,
+				// And will therefore not be allowed to be created.
 				wasOccupied = true;
 				success = false;
 			}
 			else if (check1 == true || check2 == true){
-				System.out.println("dates were fine, editting reservation");	
+				// If the negative checks were not true, one of the the positive will be true, and we will set occupied to false and sucess to true.	
 				wasOccupied = false;
 				success = true;
 			}
 			//If legal dates, telling the database to update the entry in the reservation table.
-			System.out.println("wasOccupied: " + wasOccupied);
 			if (wasOccupied == false){
 				java.sql.Date startD = new Date(start.getTimeInMillis());
-				System.out.println(startD);
 				Date endD = new Date(end.getTimeInMillis());
-				System.out.println(endD);
 				Statement select = conn.createStatement();	
 				select.executeUpdate("UPDATE `Reservation` SET `carID`='" + cId + "', `phone`='" + phone + "', `name`='" +  name + "', `start`='" + startD + "', `end`='" + endD + "' WHERE `id`='" + id + "';");
 			}
@@ -355,7 +354,11 @@ public class Database {
 		}
 		return success;
 	}
-	// Deletes a reservation by id
+	/**
+	 * Deletes a Reservation entry in the database.
+	 * 
+	 * @param id The Id of the reservation we want deleted from the Reservation table in the Database.
+	 */
 	public static void delReserv(int id){
 		try{
 			Statement select = conn.createStatement();
@@ -372,7 +375,11 @@ public class Database {
 		}
 
 	}
-	// Returns an ArrayList of all the reservation objects in the database
+
+	/**
+	 * Returns an ArrayList of all the reservation objects in the database
+	 * @return ArrayList of all the Reservation objects in the database
+	 */
 	public static ArrayList<Reservation> initReservs(){
 		ArrayList<Reservation> res = new ArrayList<Reservation>();
 		GregorianCalendar cal;
@@ -383,6 +390,7 @@ public class Database {
 			String getIt = "SELECT * FROM Reservation";
 			ResultSet result = select.executeQuery(getIt);
 			while (result.next()) {
+				//Set of variables used to create the Reservation objects.
 				cal = new GregorianCalendar();
 				cal1 = new GregorianCalendar();
 
@@ -391,13 +399,14 @@ public class Database {
 				String phone = result.getString(3);
 				String name = result.getString(4);
 				String startDate = result.getString(5);
+				//Converts the Databases' simple date formats to GregorianCalendar Objects.
 				date = Date.valueOf(startDate);
 				cal.setTime(date);
 				String endDate = result.getString(6);
 				date1 = Date.valueOf(endDate);
 				cal1.setTime(date1);
 
-
+				// Adds the Reservation to the ArrayList.
 				res.add(new Reservation(id, carID, cal, cal1, phone, name));
 			}	
 		}
@@ -408,19 +417,23 @@ public class Database {
 
 		return res;
 	}
-	// This method searches through the reservations and gathers the reservations that match the search criteria in an arraylist.
+	/**
+	 * Function that returns an ArrayList of Reservations which are within a month certain period ( a month ) and share the same CarType.
+	 * 
+	 * @param carType CarType we want the Reservations to be referencing.
+	 * @param monthStart Defines the starting date of the period we want.
+	 * @param monthEnd Defines the ending date of the period we want.
+	 * @return ArrayList of Reservations who cover dates between monthStart and monthEnd and share the same CarType.
+	 */
 	public static ArrayList<Reservation> grabPeriod(CarType carType, GregorianCalendar monthStart, GregorianCalendar monthEnd) {
-		System.out.println("Pulling from Database...");
 		ArrayList<Car> cars = initCars();
 		ArrayList<Reservation> res = initReservs();
 		ArrayList<Reservation> outputRes = new ArrayList<Reservation>();
-
 		// Gets all the car ids from the reservations
 		CarType cType = null;
 		for (Reservation r : res){
-
 			int carID = r.getCarId();	
-			// now checks for all the cars that match the id specified in the other forloop, then it finds its enum type
+			// Checks for all the cars that match the id specified in the other forloop, then it finds its enum type.
 			for (Car c : cars){
 				if (c.getId() == carID) {
 					cType = c.getType();
@@ -447,12 +460,11 @@ public class Database {
 					endCheck = false;
 				}
 				if (startCheck == true && endCheck == false || startCheck == false && endCheck == true){
-					//Reservation is valid, and does not interfere with other reservations.
+					//Reservation is invalid, and is not a part of the period we are interested in.
 					isInMonth = false;
 				}
 				else if (startCheck == true && endCheck == true || startCheck == false && endCheck == false){
-					//First case: Both are true, (r) starts before (re), and ends before 
-					//Second Case: Reservation is "inside" of another, meaning it starts after another and ends before the other one does.
+					/// Reservation is part of the period we want, and will be added to the outputRes Array.
 					isInMonth = true;
 				}
 			}
@@ -460,13 +472,13 @@ public class Database {
 				outputRes.add(r);
 			}
 		}
-
-		System.out.println("Total size of outputRes: " + outputRes.size());
 		return outputRes;
 
 	}
 
-	// This method closes the database
+	/**
+	 * This method closes the database
+	 */
 	public static void closeDb() {
 		try {
 			conn.close();
