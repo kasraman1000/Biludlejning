@@ -11,8 +11,6 @@ import com.mysql.jdbc.Connection;
 
 /**
  * Class containing all functions handled between our program and the database.
- * 
- * 
  */
 
 public class Database {

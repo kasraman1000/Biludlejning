@@ -2,8 +2,6 @@ package bgppProjekt;
 
 /**
  * A class to represent a single car from the database
- * 
- * 
  */
 public class Car {
 	
