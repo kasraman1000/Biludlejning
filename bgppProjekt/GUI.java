@@ -180,16 +180,8 @@ public class GUI implements ActionListener {
 
 	}
 
-
-	public void doubleClicked() {
-		// dunno what to do here, can't make shit work
-	}
-
 	public void actionPerformed(ActionEvent e) {
 		System.out.println("Recieved action: " + e.getActionCommand());
-	}
-	public static void kewinTest(){
-		System.out.println("Kewin test funktion");
 	}
 	
 	// Eventlisteners //
