@@ -2,8 +2,6 @@ package bgppProjekt;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -16,8 +14,6 @@ import javax.swing.JTextField;
 
 /**
  * One of the ActionBox panels, this one handles creating the interface for editing exsisting selected reservations
- * 
- * 
  */
 
 public class InspectBox extends JPanel 
@@ -135,6 +131,9 @@ public class InspectBox extends JPanel
 
 	}
 	
+	/**
+	 * Filling out the cars array with a list of all available cars
+	 */
 	public void fillCars(ArrayList<Car> c) {
 		cars = c;
 	}
@@ -146,7 +145,7 @@ public class InspectBox extends JPanel
 	 */
 	public Reservation getNewReservation() {
 		Reservation r = new Reservation(
-				selectedReservation.getId(),		// Does not have a database ID yet
+				selectedReservation.getId(),
 				selectedReservation.getCarId(),
 				new GregorianCalendar(
 						(int) startYear.getSelectedItem(), 
@@ -189,7 +188,6 @@ public class InspectBox extends JPanel
 		for (Car c : cars) {
 			if (c.getId() == r.getCarId()) {
 				carField.setText(c.getName());
-				System.out.println(c.getName());
 			}
 		}
 

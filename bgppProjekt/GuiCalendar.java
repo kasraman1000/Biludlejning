@@ -1,24 +1,26 @@
 package bgppProjekt;
 
-import java.awt.*;
-import java.awt.event.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
-import javax.swing.*;
 import java.util.Date;
+import java.util.GregorianCalendar;
+
+import javax.swing.JComponent;
 
 /**
  * The calendar graphical module, showing reservations on a monthly basis
- * 
- *
  */
 public class GuiCalendar extends JComponent implements MouseListener {
-	
+
 	// constants for drawing
-	private final int cellWidth = 20;
-	private final int cellHeight = 20;
-	private final int carNameWidth = 100;
+	private final int CELL_WIDTH = 20;
+	private final int CELL_HEIGHT = 20;
+	private final int CARNAME_WIDTH = 100;
 
 	// fields to track double clicks
 	int clickCount =0;
@@ -41,35 +43,39 @@ public class GuiCalendar extends JComponent implements MouseListener {
 
 		gui = g;
 		selectedCarType = CarType.SEDAN;
-		selectedMonth = new GregorianCalendar(2011, 11, 1);
+		selectedMonth = new GregorianCalendar();
 
 		cars = new ArrayList<Car>();
 		reservations = new ArrayList<Reservation>();
 	}
 
 	/**
-	 * Makes the calendar load everything 
+	 * Makes the calendar reload everything it needs to draw
 	 */
 	public void reload() {
-
+		// Grab all reservations in the current month
 		fillReservations();
+		// Calculate the reservations' coordinates for clicking purposes
 		fillGuiArray();	
-	
+
+		// Draw the calendar again
 		repaint();
 	}
-	
+
 	/**
-	 * Filling up the 2d array
+	 * Filling up the 2d array with references to reservations, so that
+	 * mouseClicked() knows which Calendar-cell represents what reservation.
 	 */
 	private void fillGuiArray() {
 		int numCars = calcCars();
+
 		ArrayList<Car> selectedCars = new ArrayList<Car>();
-		
 		for (Car c : cars) {
 			if (c.getType() == selectedCarType) {
 				selectedCars.add(c);
 			}
-		}	
+		}
+
 		guiArray = new Reservation[numCars][selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH)];
 		for (int c = 0; c < numCars; c++){
 			for (Reservation r : reservations) {
@@ -98,7 +104,8 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	}
 
 	/**
-	 * Filling out the reservations array
+	 * Filling out the reservations array with reservation from the
+	 * currently selected month
 	 */
 	private void fillReservations() {
 		// Figure out start and end of month
@@ -112,11 +119,13 @@ public class GuiCalendar extends JComponent implements MouseListener {
 				selectedMonth.get(Calendar.MONTH), 
 				selectedMonth.getActualMaximum(Calendar.DAY_OF_MONTH));
 		monthStart.add(Calendar.DAY_OF_MONTH, 1);
-		
+
 		reservations = Database.grabPeriod(selectedCarType, monthStart, monthEnd);
 	}
 
-
+	/**
+	 * Draws the entire calendar.
+	 */
 	public void paint(Graphics g) {
 		g.setColor(Color.BLACK);
 
@@ -127,24 +136,24 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		g.drawString(
 				Integer.toString(selectedMonth.get(Calendar.MONTH) + 1) + "/" + Integer.toString(selectedMonth.get(Calendar.YEAR)), 
 				0, 
-				cellHeight);
+				CELL_HEIGHT);
 
 		// Drawing everything horizontal (names and lines)
-		g.drawLine(0, cellHeight, calcWidth(), cellHeight);
+		g.drawLine(0, CELL_HEIGHT, calcWidth(), CELL_HEIGHT);
 
 		int numCars = 0;
 		for (Car c : cars) {
 			if (c.getType() == selectedCarType) {
-				g.drawString(c.getName(), 0, 2*cellHeight + (numCars * cellHeight));
-				g.drawLine(0, 2*cellHeight + (numCars * cellHeight), calcWidth(), 2*cellHeight + (numCars * cellHeight));
+				g.drawString(c.getName(), 0, 2*CELL_HEIGHT + (numCars * CELL_HEIGHT));
+				g.drawLine(0, 2*CELL_HEIGHT + (numCars * CELL_HEIGHT), calcWidth(), 2*CELL_HEIGHT + (numCars * CELL_HEIGHT));
 				numCars++;
 			}
 		}
 
 		// Drawing everything vertical (Numbers and lines)
 		for (int i = 0; i < selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH);i++) {
-			g.drawLine(carNameWidth + (cellWidth*i), 0, carNameWidth + (cellWidth*i), calcHeight());
-			g.drawString(Integer.toString(i + 1), carNameWidth + (cellWidth*i), cellHeight);
+			g.drawLine(CARNAME_WIDTH + (CELL_WIDTH*i), 0, CARNAME_WIDTH + (CELL_WIDTH*i), calcHeight());
+			g.drawString(Integer.toString(i + 1), CARNAME_WIDTH + (CELL_WIDTH*i), CELL_HEIGHT);
 		}
 
 		// Filling in reservations
@@ -153,19 +162,19 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			for (Car c : cars) {
 				if (c.getType() == selectedCarType) {
 					if (c.getId() == r.getCarId()) {
-						
+
 						GregorianCalendar start = (GregorianCalendar) r.getStartingDate().clone();
-						
+
 						while (start.get(Calendar.MONTH) != selectedMonth.get(Calendar.MONTH)) {
 							start.add(Calendar.DAY_OF_MONTH, 1);
 						}
-						
+
 						GregorianCalendar end = (GregorianCalendar) r.getEndDate().clone();
-						
+
 						while (end.get(Calendar.MONTH) != selectedMonth.get(Calendar.MONTH)) {
 							end.add(Calendar.DAY_OF_MONTH, -1);
 						}
-						
+
 						if (r == selectedReservation) {
 							g.setColor(Color.ORANGE);
 						}
@@ -174,23 +183,28 @@ public class GuiCalendar extends JComponent implements MouseListener {
 						}
 
 						g.fillRect(
-								carNameWidth + (start.get(Calendar.DATE) - 1) * cellWidth, 
-								carNumber * cellHeight, 
-								(end.get(Calendar.DATE) - start.get(Calendar.DATE) + 1) * cellWidth, 
-								cellHeight);
+								CARNAME_WIDTH + (start.get(Calendar.DATE) - 1) * CELL_WIDTH, 
+								carNumber * CELL_HEIGHT, 
+								(end.get(Calendar.DATE) - start.get(Calendar.DATE) + 1) * CELL_WIDTH, 
+								CELL_HEIGHT);
 						g.setColor(Color.BLACK);
 						g.drawRect(
-								carNameWidth + (start.get(Calendar.DATE) - 1) * cellWidth, 
-								carNumber * cellHeight, 
-								(end.get(Calendar.DATE) - start.get(Calendar.DATE) + 1) * cellWidth, 
-								cellHeight);
+								CARNAME_WIDTH + (start.get(Calendar.DATE) - 1) * CELL_WIDTH, 
+								carNumber * CELL_HEIGHT, 
+								(end.get(Calendar.DATE) - start.get(Calendar.DATE) + 1) * CELL_WIDTH, 
+								CELL_HEIGHT);
 					}
 					carNumber++;
 				}
 			}
 		}
 	}
-	// Function to determine if a click occurred soon enough after the previous one to be a double-click, and if it was the reservation being clicked.
+
+	/**
+	 * Function to determine if a click occurred soon enough after the previous one 
+	 * to be a double-click, and if it was the same reservation being doubleclicked.
+	 * @return Wether the click counted as the second in a doubleclick
+	 */
 	private boolean doubleClick()
 	{
 		Date newClick = new Date();
@@ -207,11 +221,17 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		return (duration<500 && reservId==reservId2);
 	}
 
+	// Defining MouseListener-interface methods...
 
+	/**
+	 * Whenever the mouse is clicked, it figures out what that click
+	 * corresponds to in the calendar 'table' coordinates, and also
+	 * selects the reservation clicked, if any.
+	 */
 	public void mouseClicked(MouseEvent e) {
 
-		int a = (e.getX() - carNameWidth) / cellWidth;
-		int b = -1 + (e.getY()/cellHeight);
+		int a = (e.getX() - CARNAME_WIDTH) / CELL_WIDTH;
+		int b = -1 + (e.getY()/CELL_HEIGHT);
 		if (a >= 0 && b >= 0) {
 			if (guiArray[b][a] != null) {
 				selectedReservation = guiArray[b][a];
@@ -230,22 +250,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		repaint();
 		clickCount=clickCount+1;
 	}
-
-	public void mouseEntered(MouseEvent arg0) {
-		
-	}
-
-	public void mouseExited(MouseEvent arg0) {
-		
-	}
-
-	public void mousePressed(MouseEvent arg0) {
-		
-	}
-
-	public void mouseReleased(MouseEvent arg0) {
-		
-	}
+	public void mouseEntered(MouseEvent arg0) {}
+	public void mouseExited(MouseEvent arg0) {}
+	public void mousePressed(MouseEvent arg0) {}
+	public void mouseReleased(MouseEvent arg0) {}
 
 	/**
 	 * @return The currently selected Reservation
@@ -307,7 +315,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		selectedCarType = c;
 		reload();
 	}
-	
+
 	/**
 	 * Sets the currently selected reservation
 	 * @param r The reservation to select
@@ -317,6 +325,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		reload();
 	}
 
+	// Overriding Jcomponent functions
 
 	public Dimension getPreferredSize() {
 		return new Dimension(calcWidth(), calcHeight());
@@ -331,7 +340,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @return Width of the calendar
 	 */
 	private int calcWidth() {
-		return carNameWidth + selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH) * cellWidth;
+		return CARNAME_WIDTH + selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH) * CELL_WIDTH;
 	}
 
 	/**
@@ -339,9 +348,13 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @return Height of the calendar
 	 */
 	private int calcHeight() {
-		return (calcCars() + 1) * cellHeight + 1;
+		return (calcCars() + 1) * CELL_HEIGHT + 1;
 	}
-	
+
+	/**
+	 * Calclates the amount of cars in the cars-array, that is of the selected carType
+	 * @return The amount of Cars of the selected CarType
+	 */
 	private int calcCars() {
 		int numCars = 0;
 		for (Car c : cars) {

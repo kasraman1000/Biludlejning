@@ -16,8 +16,6 @@ import javax.swing.JTextField;
 
 /**
  * One of the ActionBox Panels, this one handles creating the interface for creation of of new reservations
- * 
- * 
  */
 
 public class NewReservationBox extends JPanel
@@ -71,8 +69,7 @@ public class NewReservationBox extends JPanel
 		carTypeList.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				// Clear the carList and populate it again
-				System.out.println(e.getActionCommand());
+				// Clear the carList and populate it again	
 				carList.removeAllItems();
 				for (Car c : cars) {
 					if (c.getType() == carTypeList.getSelectedItem()) {
@@ -154,6 +151,9 @@ public class NewReservationBox extends JPanel
 		add(buttonPanel, BorderLayout.SOUTH);
 	}
 
+	/**
+	 * Filling out the cars array with a list of all available cars
+	 */
 	public void fillCars(ArrayList<Car> c) {
 		cars = c;
 	}
@@ -178,7 +178,7 @@ public class NewReservationBox extends JPanel
 	 */
 	public Reservation getNewReservation() {
 		Reservation r = new Reservation(
-				0,		// Does not have a database ID yet
+				0,		// Since it does not have a database ID yet
 				((Car) carList.getSelectedItem()).getId(),
 				new GregorianCalendar(
 						(int) startYear.getSelectedItem(), 

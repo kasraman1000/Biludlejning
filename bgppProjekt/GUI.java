@@ -179,7 +179,6 @@ public class GUI implements ActionListener {
 		
 		frame.pack();
 		frame.setVisible(true);
-		System.out.println("Going visible!");
 
 	}
 
