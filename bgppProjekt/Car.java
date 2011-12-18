@@ -43,7 +43,9 @@ public class Car {
 	public int getId() {
 		return id;
 	}
-	
+	/**
+	 * @return Returns the cars name.
+	 */
 	public String toString() {
 		return getName();
 	}

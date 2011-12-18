@@ -45,7 +45,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 
 		cars = new ArrayList<Car>();
 		reservations = new ArrayList<Reservation>();
-
 	}
 
 	/**
@@ -60,7 +59,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	}
 	
 	/**
-	 * filling up the 2d array
+	 * Filling up the 2d array
 	 */
 	private void fillGuiArray() {
 		int numCars = calcCars();
@@ -70,10 +69,8 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			if (c.getType() == selectedCarType) {
 				selectedCars.add(c);
 			}
-		}
-		
+		}	
 		guiArray = new Reservation[numCars][selectedMonth.getActualMaximum(selectedMonth.DAY_OF_MONTH)];
-
 		for (int c = 0; c < numCars; c++){
 			for (Reservation r : reservations) {
 				if (r.getCarId() == selectedCars.get(c).getId()) {
@@ -85,15 +82,11 @@ public class GuiCalendar extends JComponent implements MouseListener {
 						if (date.get(Calendar.MONTH) == selectedMonth.get(Calendar.MONTH)) {
 							guiArray[c][date.get(Calendar.DATE) - 1] = r;
 						}
-						date.add(Calendar.DATE, 1);
-						
+						date.add(Calendar.DATE, 1);						
 					}
-
 				}
 			}
 		}
-
-
 	}
 
 	/**
@@ -114,9 +107,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 				selectedMonth.get(Calendar.MONTH), 
 				selectedMonth.getActualMinimum(Calendar.DAY_OF_MONTH));
 		monthStart.add(Calendar.DAY_OF_MONTH, -1);
-
-		System.out.println(selectedMonth.get(Calendar.MONTH));
-
 		GregorianCalendar monthEnd = new GregorianCalendar(
 				selectedMonth.get(Calendar.YEAR), 
 				selectedMonth.get(Calendar.MONTH), 
@@ -200,7 +190,7 @@ public class GuiCalendar extends JComponent implements MouseListener {
 			}
 		}
 	}
-	// function to determine if a click occurred soon enough after the previous one to be a double-click.
+	// Function to determine if a click occurred soon enough after the previous one to be a double-click, and if it was the reservation being clicked.
 	private boolean doubleClick()
 	{
 		Date newClick = new Date();
@@ -208,13 +198,10 @@ public class GuiCalendar extends JComponent implements MouseListener {
 		if (click != null) {
 			duration = newClick.getTime() - click.getTime();
 		}
-
-		System.out.println("duration: " + duration);
 		int reservId2=0;
 		if(selectedReservation!=null)
 		{
 			reservId2 = selectedReservation.getId();
-			System.out.println("Reserv2: " + reservId2);
 		}
 
 		return (duration<500 && reservId==reservId2);
@@ -225,27 +212,20 @@ public class GuiCalendar extends JComponent implements MouseListener {
 
 		int a = (e.getX() - carNameWidth) / cellWidth;
 		int b = -1 + (e.getY()/cellHeight);
-
-		System.out.println("x-coordinate: " + a);
-		System.out.println("y-coordinate: " + b);
 		if (a >= 0 && b >= 0) {
 			if (guiArray[b][a] != null) {
 				selectedReservation = guiArray[b][a];
-				System.out.println("ReservationID: " + selectedReservation.getId());
 				if (clickCount > 0)
 				{
 					if (doubleClick())
 					{
-						System.out.println("It was a doubleclick");
 						gui.editReservationByDoubleClick();
 					}
 				}
 				click = new Date();
 				reservId = selectedReservation.getId();	
-				System.out.println("reservId : " + reservId);
 			}
 		}
-		System.out.println("CLICKED");
 
 		repaint();
 		clickCount=clickCount+1;
@@ -300,7 +280,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @param i The number of the month (0-11)
 	 */
 	public void setSelectedMonth(int i) {
-		System.out.println("Changing selected month to: " + i);
 		selectedMonth = new GregorianCalendar(
 				selectedMonth.get(Calendar.YEAR),
 				i,
@@ -313,7 +292,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @param i The number of the year
 	 */
 	public void setSelectedYear(int i) {
-		System.out.println("Changing selected year to: " + i);
 		selectedMonth = new GregorianCalendar(
 				i, 
 				selectedMonth.get(Calendar.MONTH), 
@@ -326,7 +304,6 @@ public class GuiCalendar extends JComponent implements MouseListener {
 	 * @param c The Car Type to list
 	 */
 	public void setSelectedCarType(CarType c) {
-		System.out.println("Changing selected car type to: " + c);
 		selectedCarType = c;
 		reload();
 	}

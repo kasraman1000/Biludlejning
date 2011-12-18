@@ -26,9 +26,9 @@ public class Database {
 	static String name;
 	static int id;
 
-	// connection objekt til databaseforbindelsen
+	// The Connection object we use to open and close the connection between program and database.
 	private static Connection conn = null;
-	// driveren til databasen
+	// The Driver object for our Database
 	private static String driver = "com.mysql.jdbc.Driver";		
 	private static String dbName = "BiludlejningCrelde";
 	private static String username = "Crelde", password = "bil";
