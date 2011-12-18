@@ -11,6 +11,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.ListSelectionModel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * One of the ActionBox Panels, this one handles creating the interface for searching through all reservations.
@@ -18,19 +20,14 @@ import javax.swing.ListSelectionModel;
 
 public class SearchBox extends JPanel
 {
-	JList<Reservation> list;
-	DefaultListModel<Reservation> listModel;
-	JPanel searchPanel;
+	private JList<Reservation> list;
+	private DefaultListModel<Reservation> listModel;
+	private JPanel searchPanel;
 	
-	JTextField searchField;
-	JButton searchButton;
+	private JTextField searchField;
+	private JButton searchButton;
 	
 	public SearchBox() 
-	{
-		makeFrame();
-	}
-
-	private void makeFrame() 
 	{
 		listModel = new DefaultListModel<Reservation>();
 		list = new JList<Reservation>(listModel);
@@ -60,16 +57,23 @@ public class SearchBox extends JPanel
 				
 				for (Reservation r : reservations) {
 					if (r.getCustomerName().toLowerCase().contains(s)) {
-						System.out.println(s + " was found in customer name: " + r.getCustomerName());
 						listModel.addElement(r);
 					}
 					else if (r.getCustomerPhone().toLowerCase().contains(s)) {
-						System.out.println(s + " was found in customer phone: " + r.getCustomerPhone());
 						listModel.addElement(r);
 					}
 				}
 			}
 		});
+	}
 
+	/**
+	 * Returns the list componenent, so you can pull out the selected entry
+	 * or attach listselectionListeners
+	 * @return The JList component
+	 */
+	public JList<Reservation> getList() 
+	{
+		return list;
 	}
 }

@@ -17,6 +17,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 
 /**
  * The central class that instantiates and handles all graphical components, and also serves as a "controller", listening for all actions
@@ -149,6 +151,9 @@ public class GUI implements ActionListener {
 		actionPanel.add(actionBox, BorderLayout.CENTER);
 
 		searchBox = new SearchBox();
+		searchBox.getList().addListSelectionListener(new ListSelectListener());
+		
+		
 		inspectBox = new InspectBox();
 		inspectBox.fillCars(cars);
 		inspectBox.getSaveButton().addActionListener(new SaveReservationListener());
@@ -343,6 +348,28 @@ public class GUI implements ActionListener {
 			guiCalendar.setSelectedReservation(null);
 
 			actionCards.show(actionBox, "BLANK");
+		}
+	}
+	
+	// Invoked when an entry in the search results list is selected
+	private class ListSelectListener implements ListSelectionListener
+	{
+		public void valueChanged(ListSelectionEvent e) {
+			if (!e.getValueIsAdjusting()) {
+				selectedReservation = searchBox.getList().getSelectedValue();
+				
+				CarType t = CarType.SEDAN;
+				for (Car c: cars) {
+					if (selectedReservation.getCarId() == c.getId()) {
+						t = c.getType();
+					}
+				}
+				carTypeList.setSelectedItem(t);
+				monthList.setSelectedIndex(selectedReservation.getStartingDate().get(Calendar.MONTH));
+				yearList.setSelectedItem(selectedReservation.getStartingDate().get(Calendar.YEAR));
+				
+				guiCalendar.setSelectedReservation(selectedReservation);
+			}
 		}
 	}
 	

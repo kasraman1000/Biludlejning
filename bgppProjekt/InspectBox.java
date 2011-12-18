@@ -42,11 +42,6 @@ public class InspectBox extends JPanel
 
 	public InspectBox() 
 	{
-		makeFrame();
-	}
-
-	private void makeFrame() 
-	{
 		setLayout(new BorderLayout());
 
 		// Adding all the data fields
@@ -199,4 +194,5 @@ public class InspectBox extends JPanel
 		endYear.setSelectedItem(r.getEndDate().get(Calendar.YEAR));
 
 	}
+
 }
